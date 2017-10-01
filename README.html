@@ -1,0 +1,43 @@
+<html>
+      <head>
+        <meta charset="UTF-8">
+        <title>README.md</title>
+      </head>
+      <body>
+        <h1 id="aftc-preloadjs">AFTC-PreloadJS</h1>
+<p>The AFTC-PreloadJS is quick, no fuss, easy to use preloader.</p>
+<p>Why did I make this? PreloadJS was not on it&#39;s own and I didn&#39;t want all that other nonsense that comes with it. I Just wanted a quick and easy preloader, so I made one.</p>
+<h1 id="features">Features</h1>
+<h1 id="sequential-javascript-file-preloading-and-dom-attachment">Sequential JavaScript file preloading and DOM attachment</h1>
+<p>It will preload your JavaScript files in order and attach them to the DOM for you, so they will become available in the sequence you add them.</p>
+<h1 id="usage">Usage</h1>
+<pre><code>var preloader = new AFTC.Preloader({
+    onComplete:&lt;YourOnCompleteFunction&gt;,
+    onProgress:&lt;YourOnProgressFunction&gt;
+});
+
+// Add files you wish to preload like so
+//preloader.add(&lt;unique_id&gt;,&lt;path&gt;,&lt;type css|javascript|image|*&gt;);
+
+
+preloader.add(&quot;css1&quot;,&quot;includes/css/aftc/aftc1.css&quot;,&quot;css&quot;);
+preloader.add(&quot;css2&quot;,&quot;includes/css/aftc/aftc2.css&quot;,&quot;css&quot;);
+preloader.add(&quot;css3&quot;,&quot;includes/css/aftc/aftc3.css&quot;,&quot;css&quot;);
+
+preloader.add(&quot;js1&quot;,&quot;includes/js/misc/lodash.min.js&quot;,&quot;javascript&quot;);
+preloader.add(&quot;js2&quot;,&quot;includes/js/DTools.js&quot;,&quot;javascript&quot;);
+
+preloader.add(&quot;img1&quot;,&quot;images/img1.png&quot;,&quot;image&quot;);
+preloader.add(&quot;img2&quot;,&quot;images/img2.jpg&quot;,&quot;image&quot;);
+preloader.add(&quot;img3&quot;,&quot;images/img3.gif&quot;,&quot;image&quot;);
+
+preloader.add(&quot;MyUid1&quot;,&quot;assets/xxxxx.xxx&quot;,&quot;json&quot;);
+preloader.add(&quot;MyUid1&quot;,&quot;assets/xxxxx.xxx&quot;,&quot;xml&quot;);
+preloader.add(&quot;MyUid1&quot;,&quot;assets/xxxxx.xxx&quot;,&quot;obj&quot;);
+preloader.add(&quot;MyUid1&quot;,&quot;assets/xxxxx.xxx&quot;,&quot;mtl&quot;);
+preloader.add(&quot;MyUid1&quot;,&quot;assets/xxxxx.xxx&quot;,&quot;font&quot;);
+
+preloader.start();
+</code></pre>
+      </body>
+    </html>

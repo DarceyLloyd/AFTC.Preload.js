@@ -1,6 +1,17 @@
 # AFTC-PreloadJS
 The AFTC-PreloadJS is quick, no fuss, easy to use preloader.
 
+Why did I make this? PreloadJS was not on it's own and I didn't want all that other nonsense that comes with it. I Just wanted a quick and easy preloader, so I made one.
+
+
+#  Features
+
+#     Sequential JavaScript file preloading and DOM attachment
+It will preload your JavaScript files in order and attach them to the DOM for you, so they will become available in the sequence you add them.
+
+
+
+
 #  Usage
 ```
 var preloader = new AFTC.Preloader({
