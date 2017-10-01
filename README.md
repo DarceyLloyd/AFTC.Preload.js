@@ -9,13 +9,32 @@ Why did I make this? PreloadJS was not on it's own and I didn't want all that ot
 It will preload your JavaScript files in order and attach them to the DOM for you, so they will become available in the sequence you add them.
 ### CSS Dom attachment
 Any CSS files you add to the preloader will be added to the DOM once they have been preloaded to ensure styles are available.
+### Batch loading
+Any files which are not of type JavaScript, will be put into the batch loader. Default is to attempt to load 4 items at a time, you can change this via constructor argument, see usage.
 
 
 ## Usage
 ```
 var preloader = new AFTC.Preloader({
     onComplete:<YourOnCompleteFunction>,
-    onProgress:<YourOnProgressFunction>
+    onProgress:<YourOnProgressFunction>,
+    batchSize:<NoOfFileYouWishToPreloadAtATime>
+});
+```
+
+
+## Example 
+```
+function preloaderComplete(){
+    console.log("Preloader has completed!");
+}
+function preloaderProgressHandler(p){
+    console.log("PreloaderProgressHandler(): Percent loaded = " + p);
+}
+
+var preloader = new AFTC.Preloader({
+    onComplete:preloaderComplete,
+    onProgress:preloaderProgressHandler
 });
 
 // Add files you wish to preload like so

@@ -12,10 +12,25 @@
 <p>It will preload your JavaScript files in order and attach them to the DOM for you, so they will become available in the sequence you add them.</p>
 <h3 id="css-dom-attachment">CSS Dom attachment</h3>
 <p>Any CSS files you add to the preloader will be added to the DOM once they have been preloaded to ensure styles are available.</p>
+<h3 id="batch-loading">Batch loading</h3>
+<p>Any files which are not of type JavaScript, will be put into the batch loader. Default is to attempt to load 4 items at a time, you can change this via constructor argument, see usage.</p>
 <h2 id="usage">Usage</h2>
 <pre><code>var preloader = new AFTC.Preloader({
     onComplete:&lt;YourOnCompleteFunction&gt;,
-    onProgress:&lt;YourOnProgressFunction&gt;
+    onProgress:&lt;YourOnProgressFunction&gt;,
+    batchSize:&lt;NoOfFileYouWishToPreloadAtATime&gt;
+});
+</code></pre><h2 id="example">Example</h2>
+<pre><code>function preloaderComplete(){
+    console.log(&quot;Preloader has completed!&quot;);
+}
+function preloaderProgressHandler(p){
+    console.log(&quot;PreloaderProgressHandler(): Percent loaded = &quot; + p);
+}
+
+var preloader = new AFTC.Preloader({
+    onComplete:preloaderComplete,
+    onProgress:preloaderProgressHandler
 });
 
 // Add files you wish to preload like so
