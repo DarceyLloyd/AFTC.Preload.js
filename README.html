@@ -7,10 +7,12 @@
         <h1 id="aftc-preloadjs">AFTC-PreloadJS</h1>
 <p>The AFTC-PreloadJS is quick, no fuss, easy to use preloader.</p>
 <p>Why did I make this? PreloadJS was not on it&#39;s own and I didn&#39;t want all that other nonsense that comes with it. I Just wanted a quick and easy preloader, so I made one.</p>
-<h1 id="features">Features</h1>
-<h1 id="sequential-javascript-file-preloading-and-dom-attachment">Sequential JavaScript file preloading and DOM attachment</h1>
+<h2 id="features">Features</h2>
+<h3 id="sequential-javascript-file-preloading-and-dom-attachment">Sequential JavaScript file preloading and DOM attachment</h3>
 <p>It will preload your JavaScript files in order and attach them to the DOM for you, so they will become available in the sequence you add them.</p>
-<h1 id="usage">Usage</h1>
+<h3 id="css-dom-attachment">CSS Dom attachment</h3>
+<p>Any CSS files you add to the preloader will be added to the DOM once they have been preloaded to ensure styles are available.</p>
+<h2 id="usage">Usage</h2>
 <pre><code>var preloader = new AFTC.Preloader({
     onComplete:&lt;YourOnCompleteFunction&gt;,
     onProgress:&lt;YourOnProgressFunction&gt;
