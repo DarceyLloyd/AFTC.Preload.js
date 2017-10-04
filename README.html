@@ -4,11 +4,14 @@
         <title>README.md</title>
       </head>
       <body>
-        <h1 id="aftc-preloadjs">AFTC-PreloadJS</h1>
-<p>The AFTC-PreloadJS is quick, no fuss, easy to use preloader.</p>
+        <h1 id="aftc-preloadjs">AFTC.PreloadJS</h1>
+<p>The AFTC.Preload is quick, no fuss, easy to use preloader.</p>
 <p>Why did I make this? PreloadJS was not on it&#39;s own and I didn&#39;t want all that other nonsense that comes with it. I Just wanted a quick and easy preloader, so I made one.</p>
 <h2 id="features">Features</h2>
-<h3 id="sequential-javascript-file-preloading-and-dom-attachment">Sequential JavaScript file preloading and DOM attachment</h3>
+<h3 id="new-ondemand-loading-of-javascript-files">NEW: OnDemand loading of JavaScript files</h3>
+<p>Simply load and integrate a JavaScript file anywhere in your code, with on complete callback feature.</p>
+<pre><code>preloader.loadNow(url,onCompleteFunction);
+</code></pre><h3 id="sequential-javascript-file-preloading-and-dom-attachment">Sequential JavaScript file preloading and DOM attachment</h3>
 <p>It will preload your JavaScript files in order and attach them to the DOM for you, so they will become available in the sequence you add them.</p>
 <h3 id="css-dom-attachment">CSS Dom attachment</h3>
 <p>Any CSS files you add to the preloader will be added to the DOM once they have been preloaded to ensure styles are available.</p>
@@ -55,6 +58,15 @@ preloader.add(&quot;MyUid1&quot;,&quot;assets/xxxxx.xxx&quot;,&quot;mtl&quot;);
 preloader.add(&quot;MyUid1&quot;,&quot;assets/xxxxx.xxx&quot;,&quot;font&quot;);
 
 preloader.start();
+</code></pre><h2 id="uage-of-ondemand-loading">Uage of onDemand loading</h2>
+<pre><code>    preloader.loadNow(&quot;includes/js/JavaScriptFile.js&quot;, function () {
+        // Do what you want
+    });
+</code></pre><p>or </p>
+<pre><code>    function myOnCompleteFunction(){
+        // Do what you want
+    }
+    preloader.loadNow(&quot;includes/js/JavaScriptFile.js&quot;, myOnCompleteFunction);
 </code></pre>
       </body>
     </html>

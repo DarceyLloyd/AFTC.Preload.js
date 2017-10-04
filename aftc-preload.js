@@ -192,7 +192,7 @@ AFTC.Preloader = function () {
 
 
 
-       
+
     }
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -202,6 +202,8 @@ AFTC.Preloader = function () {
     function preloadFile(queItem) {
         //log("AFTC.Preloader.preloadFile(): " + queItem.url);
         //log(queItem);
+
+        var ext = queItem.url.split('.').pop();
 
         $.ajax({
             url: queItem.url,
@@ -273,6 +275,76 @@ AFTC.Preloader = function () {
 
 
 
+    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    function loadNow(url, onComplete) {
+        //log("AFTC.Preloader.loadNow(url,onComplete): " + url);
+        
+        if (typeof(url) == "array"){
+            for (var i = 0; i < url.length; i++) {
+                if (i = (url.length-1)){
+                    loadNow(url[i],onComplete);
+                } else {
+                    loadNow(url[i],null);
+                }
+                
+            }
+            return;
+        }
+
+        var ext = url.split('.').pop();
+
+        $.ajax({
+            url: url,
+            success: function () {
+                //log("AFTC.Preloader.loadNow(): Sucesss: " + url);
+
+                // Attach any JavaScript to the page that is on the preload list
+                if (ext == "js") {
+                    var script = document.createElement('script');
+                    script.onload = function () {
+                        if (onComplete || onComplete != undefined){
+                            onComplete();
+                        }
+                    };
+                    script.src = url;
+                    document.head.appendChild(script); //or something of the likes
+
+                } else if (ext == "css") {
+                    var head = document.getElementsByTagName('head')[0];
+                    var link = document.createElement('link');
+                    //link.id   = cssId;
+                    link.rel = 'stylesheet';
+                    link.type = 'text/css';
+                    link.href = queItem.url;
+                    link.media = 'all';
+                    link.onload = function () {
+                        if (onComplete || onComplete != undefined){
+                            onComplete();
+                        }
+                    };
+                    head.appendChild(link);
+                } else {
+                    if (onComplete || onComplete != undefined){
+                        onComplete();
+                    }
+                }
+
+
+            },
+            error: function (a, b, c) {
+                var msg = "# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #\n";
+                msg += "AFTC.Preloader.loadNow(): !ERROR! \n";
+                msg += "Error on [" + url + "]" + "\n";
+                msg += "Error [" + b + "]" + "\n";
+                msg += "Error [" + c + "]" + "\n";
+                msg += "# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #";
+                console.error(msg);
+                params.error = true;
+            }
+
+        });
+    }
+    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 
 
@@ -343,6 +415,10 @@ AFTC.Preloader = function () {
             log("AFTC Preloader:");
             log(params);
             log("");
+        },
+
+        loadNow: function (url, onComplete) {
+            loadNow(url, onComplete);
         }
     }
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
