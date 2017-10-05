@@ -1,11 +1,11 @@
 /*
  * Author: Darcey@AllForTheCode.co.uk
- * Version: 1.0
+ * Version: 1.0.1
  * https://w3c.github.io/preload/
 */
 
 // Ensure my lazy logger is available
-if (!log) { function log(arg) { console.log(arg); } }
+if (!log) { function log(arg) { if (console) { console.log(arg); } } }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 var AFTC = AFTC || {}
@@ -28,35 +28,31 @@ AFTC.Preloader = function () {
         onProgress: null,
         onError: null
     };
-
-
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
 
     // Process arguments
-    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     if (arguments[0] && typeof (arguments[0]) == "object") {
 
-        if (arguments[0].app) {
-            // Access to DThree can be had via app but is not necessary: var app = arguments[0].app;
-            // var scene = app.getScene();
-            // var sceneParams = app.getSceneParams();
-            app = arguments[0].app;
-            renderer = app.getRenderer();
-            scene = app.getScene();
+        for (var key in arguments[0]) {
+            if (arguments[0].hasOwnProperty(key)) {
+                params[key] = arguments[0][key];
+            }
         }
 
-        if (arguments[0].onComplete) { params.onComplete = arguments[0].onComplete; }
-        if (arguments[0].onComplete) { params.onProgress = arguments[0].onProgress; }
-        if (arguments[0].batchSize) { params.batchSize = arguments[0].batchSize; }
-
+        // if (arguments[0].onComplete) { params.onComplete = arguments[0].onComplete; }
+        // if (arguments[0].onProgress) { params.onProgress = arguments[0].onProgress; }
+        // if (arguments[0].batchSize) { params.batchSize = arguments[0].batchSize; }
     }
-    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
 
 
 
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     function start() {
-        //console.log("AFTC.Preloader.start()");
+        //console.log("AFTC.preload.start()");
 
         params.noOfFilesLoaded = 0;
         params.noOfJSFiles = 0;
@@ -83,7 +79,7 @@ AFTC.Preloader = function () {
 
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     function getItemFromQue() {
-        //log("AFTC.Preloader.getItemFromQue()");
+        //log("AFTC.preload.getItemFromQue()");
 
         for (var i = 0; i < params.que.length; i++) {
             var queItem = params.que[i];
@@ -96,7 +92,7 @@ AFTC.Preloader = function () {
 
                 // Are we looking for "javascript", "css" or * file types
                 if (params.noOfJSFilePreloaded < params.noOfJSFiles) {
-                    //log("AFTC.Preloader.getItemFromQue(): JavaScript files:  noOfJSFilePreloaded:" + params.noOfJSFilePreloaded + "  noOfJSFiles:" + params.noOfJSFiles);
+                    //log("AFTC.preload.getItemFromQue(): JavaScript files:  noOfJSFilePreloaded:" + params.noOfJSFilePreloaded + "  noOfJSFiles:" + params.noOfJSFiles);
                     // JS
                     if (queItem.type == "javascript") {
                         queItem.preloading = true;
@@ -104,7 +100,7 @@ AFTC.Preloader = function () {
                         return queItem;
                     }
                     // } else if (params.noOfCSSFilesPreloaded < params.noOfCSSFiles) {
-                    //     log("AFTC.Preloader.getItemFromQue(): CSS files:  noOfCSSFilesPreloaded:" + params.noOfCSSFilesPreloaded + "  noOfCSSFiles:" + params.noOfCSSFiles);
+                    //     log("AFTC.preload.getItemFromQue(): CSS files:  noOfCSSFilesPreloaded:" + params.noOfCSSFilesPreloaded + "  noOfCSSFiles:" + params.noOfCSSFiles);
                     //     // CSS
                     //     if (queItem.type == "css") {
                     //         queItem.preloading = true;
@@ -112,7 +108,7 @@ AFTC.Preloader = function () {
                     //         return queItem;
                     //     }
                 } else {
-                    //log("AFTC.Preloader.getItemFromQue(): Generic");
+                    //log("AFTC.preload.getItemFromQue(): Generic");
                     // Any file type other than JS and CSS
                     //if (queItem.type != "javascript" && queItem.type != "css") {
                     if (queItem.type != "javascript") {
@@ -141,7 +137,7 @@ AFTC.Preloader = function () {
             return false;
         }
 
-        //log("AFTC.Preloader.batchProcessor()");
+        //log("AFTC.preload.batchProcessor()");
 
 
         var allBatchItemsNull = true,
@@ -200,7 +196,7 @@ AFTC.Preloader = function () {
 
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     function preloadFile(queItem) {
-        //log("AFTC.Preloader.preloadFile(): " + queItem.url);
+        //log("AFTC.preload.preloadFile(): " + queItem.url);
         //log(queItem);
 
         var ext = queItem.url.split('.').pop();
@@ -208,7 +204,7 @@ AFTC.Preloader = function () {
         $.ajax({
             url: queItem.url,
             success: function () {
-                //log("AFTC.Preloader.preloadFile(): Sucesss: " + queItem.url);
+                //log("AFTC.preload.preloadFile(): Sucesss: " + queItem.url);
 
                 // Attach any JavaScript to the page that is on the preload list
                 if (queItem.type == "javascript") {
@@ -219,7 +215,7 @@ AFTC.Preloader = function () {
                         queItem.preloaded = true;
                         params.noOfJSFilePreloaded++;
                         params.noOfFilesLoaded++;
-                        //log("AFTC.Preloader.preloadFile(): JS File [" + queItem.url + "] has been attached to the DOM!");
+                        //log("AFTC.preload.preloadFile(): JS File [" + queItem.url + "] has been attached to the DOM!");
                         onItemLoaded(queItem);
                         batchProcessor();
                     };
@@ -241,7 +237,7 @@ AFTC.Preloader = function () {
                         params.noOfCSSFilesPreloaded++;
                         params.batch[queItem.batchIndex] = null;
                         params.noOfFilesLoaded++;
-                        //log("AFTC.Preloader.preloadFile(): CSS File [" + queItem.url + "] has been attached to the DOM!");
+                        //log("AFTC.preload.preloadFile(): CSS File [" + queItem.url + "] has been attached to the DOM!");
                         onItemLoaded(queItem);
                         batchProcessor();
                     };
@@ -259,7 +255,7 @@ AFTC.Preloader = function () {
             },
             error: function (a, b, c) {
                 var msg = "# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #\n";
-                msg += "AFTC.Preloader(): ERROR: PRELOADER STOPPED! \n";
+                msg += "AFTC.preload(): ERROR: PRELOADER STOPPED! \n";
                 msg += "Error on [" + queItem.url + "]" + "\n";
                 msg += "Error [" + b + "]" + "\n";
                 msg += "Error [" + c + "]" + "\n";
@@ -277,16 +273,16 @@ AFTC.Preloader = function () {
 
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     function loadNow(url, onComplete) {
-        //log("AFTC.Preloader.loadNow(url,onComplete): " + url);
-        
-        if (typeof(url) == "array"){
+        //log("AFTC.preload.loadNow(url,onComplete): " + url);
+
+        if (typeof (url) == "array") {
             for (var i = 0; i < url.length; i++) {
-                if (i = (url.length-1)){
-                    loadNow(url[i],onComplete);
+                if (i = (url.length - 1)) {
+                    loadNow(url[i], onComplete);
                 } else {
-                    loadNow(url[i],null);
+                    loadNow(url[i], null);
                 }
-                
+
             }
             return;
         }
@@ -296,13 +292,13 @@ AFTC.Preloader = function () {
         $.ajax({
             url: url,
             success: function () {
-                //log("AFTC.Preloader.loadNow(): Sucesss: " + url);
+                //log("AFTC.preload.loadNow(): Sucesss: " + url);
 
                 // Attach any JavaScript to the page that is on the preload list
                 if (ext == "js") {
                     var script = document.createElement('script');
                     script.onload = function () {
-                        if (onComplete || onComplete != undefined){
+                        if (onComplete || onComplete != undefined) {
                             onComplete();
                         }
                     };
@@ -318,13 +314,13 @@ AFTC.Preloader = function () {
                     link.href = queItem.url;
                     link.media = 'all';
                     link.onload = function () {
-                        if (onComplete || onComplete != undefined){
+                        if (onComplete || onComplete != undefined) {
                             onComplete();
                         }
                     };
                     head.appendChild(link);
                 } else {
-                    if (onComplete || onComplete != undefined){
+                    if (onComplete || onComplete != undefined) {
                         onComplete();
                     }
                 }
@@ -333,7 +329,7 @@ AFTC.Preloader = function () {
             },
             error: function (a, b, c) {
                 var msg = "# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #\n";
-                msg += "AFTC.Preloader.loadNow(): !ERROR! \n";
+                msg += "AFTC.preload.loadNow(): !ERROR! \n";
                 msg += "Error on [" + url + "]" + "\n";
                 msg += "Error [" + b + "]" + "\n";
                 msg += "Error [" + c + "]" + "\n";
@@ -350,7 +346,7 @@ AFTC.Preloader = function () {
 
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     function onComplete() {
-        //log("AFTC.Preloader.onComplete()");
+        //log("AFTC.preload.onComplete()");
 
         if (params.onComplete) {
             params.onComplete();
@@ -370,10 +366,10 @@ AFTC.Preloader = function () {
 
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     function onItemLoaded(item) {
-        //log("AFTC.Preloader.onItemLoaded(): " + item.url);
+        //log("AFTC.preload.onItemLoaded(): " + item.url);
         params.percentLoaded = ((100 / params.que.length) * params.noOfFilesLoaded) * 100;
         params.percentLoaded = Math.round(params.percentLoaded) / 100;
-        //log("AFTC.Preloader.onItemLoaded(): percentLoaded: " + params.percentLoaded);
+        //log("AFTC.preload.onItemLoaded(): percentLoaded: " + params.percentLoaded);
         if (params.onProgress) {
             params.onProgress(params.percentLoaded);
         }
@@ -385,16 +381,27 @@ AFTC.Preloader = function () {
     // Public / Return exposed
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     return {
-        add: function (id, url, type) {
+        add: function () {
             var o = {
-                id: id,
-                url: url,
-                type: type,
+                id: null,
+                url: "",
+                type: null,
                 preloading: false,
                 preloaded: false,
                 index: -1,
                 batchIndex: -1
             }
+
+            // Process object arguments
+            if (arguments[0] && typeof (arguments[0]) == "object") {
+
+                for (var key in arguments[0]) {
+                    if (arguments[0].hasOwnProperty(key)) {
+                        o[key] = arguments[0][key];
+                    }
+                }
+            }
+
             params.que.push(o);
         },
 

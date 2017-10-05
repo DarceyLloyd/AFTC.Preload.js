@@ -6,7 +6,7 @@ Why did I make this? PreloadJS was not on it's own and I didn't want all that ot
 
 ## Features
 
-### NEW: OnDemand loading of JavaScript files
+### OnDemand loading of JavaScript files
 Simply load and integrate a JavaScript file anywhere in your code, with on complete callback feature.
 ```
 preloader.loadNow(url,onCompleteFunction);
@@ -41,40 +41,46 @@ function preloaderProgressHandler(p){
     console.log("PreloaderProgressHandler(): Percent loaded = " + p);
 }
 
-var preloader = new AFTC.Preloader({
+var myPreloader = new AFTC.Preloader({
     onComplete:preloaderComplete,
     onProgress:preloaderProgressHandler
 });
 
+
 // Add files you wish to preload like so
-//preloader.add(<unique_id>,<path>,<type css|javascript|image|*>);
+/*
+myPreloader.add({
+    id:<unique_id>,
+    url:<url>,
+    type:<type css|javascript|image|*>
+});
+*/
 
+myPreloader.add({url:"includes/css/aftc/aftc1.css",type:"css"});
+myPreloader.add({url:"includes/css/aftc/aftc2.css",type:"css"});
+myPreloader.add({url:"includes/css/aftc/aftc3.css",type:"css"});
 
-preloader.add("css1","includes/css/aftc/aftc1.css","css");
-preloader.add("css2","includes/css/aftc/aftc2.css","css");
-preloader.add("css3","includes/css/aftc/aftc3.css","css");
+myPreloader.add({url:"includes/js/misc/lodash.min.js",type:"javascript"});
+myPreloader.add({url:"includes/js/DTools.js",type:"javascript"});
 
-preloader.add("js1","includes/js/misc/lodash.min.js","javascript");
-preloader.add("js2","includes/js/DTools.js","javascript");
+myPreloader.add({url:"images/img1.png",type:"image"});
+myPreloader.add({url:"images/img2.jpg",type:"image"});
+myPreloader.add({url:"images/img3.gif",type:"image"});
 
-preloader.add("img1","images/img1.png","image");
-preloader.add("img2","images/img2.jpg","image");
-preloader.add("img3","images/img3.gif","image");
+myPreloader.add({url:"assets/xxxxx.xxx",type:"json"});
+myPreloader.add({url:"assets/xxxxx.xxx",type:"xml"});
+myPreloader.add({url:"assets/xxxxx.xxx",type:"obj"});
+myPreloader.add({url:"assets/xxxxx.xxx",type:"mtl"});
+myPreloader.add({url:"assets/xxxxx.xxx",type:"font"});
 
-preloader.add("MyUid1","assets/xxxxx.xxx","json");
-preloader.add("MyUid1","assets/xxxxx.xxx","xml");
-preloader.add("MyUid1","assets/xxxxx.xxx","obj");
-preloader.add("MyUid1","assets/xxxxx.xxx","mtl");
-preloader.add("MyUid1","assets/xxxxx.xxx","font");
-
-preloader.start();
+myPreloader.start();
 ```
 
 
 
 ## Uage of onDemand loading
 ```
-    preloader.loadNow("includes/js/JavaScriptFile.js", function () {
+    myPreloader.loadNow("includes/js/JavaScriptFile.js", function () {
         // Do what you want
     });
 ```
@@ -85,5 +91,5 @@ or
     function myOnCompleteFunction(){
         // Do what you want
     }
-    preloader.loadNow("includes/js/JavaScriptFile.js", myOnCompleteFunction);
+    myPreloader.loadNow("includes/js/JavaScriptFile.js", myOnCompleteFunction);
 ```

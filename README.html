@@ -8,7 +8,7 @@
 <p>The AFTC.Preload is quick, no fuss, easy to use preloader.</p>
 <p>Why did I make this? PreloadJS was not on it&#39;s own and I didn&#39;t want all that other nonsense that comes with it. I Just wanted a quick and easy preloader, so I made one.</p>
 <h2 id="features">Features</h2>
-<h3 id="new-ondemand-loading-of-javascript-files">NEW: OnDemand loading of JavaScript files</h3>
+<h3 id="ondemand-loading-of-javascript-files">OnDemand loading of JavaScript files</h3>
 <p>Simply load and integrate a JavaScript file anywhere in your code, with on complete callback feature.</p>
 <pre><code>preloader.loadNow(url,onCompleteFunction);
 </code></pre><h3 id="sequential-javascript-file-preloading-and-dom-attachment">Sequential JavaScript file preloading and DOM attachment</h3>
@@ -31,42 +31,48 @@ function preloaderProgressHandler(p){
     console.log(&quot;PreloaderProgressHandler(): Percent loaded = &quot; + p);
 }
 
-var preloader = new AFTC.Preloader({
+var myPreloader = new AFTC.Preloader({
     onComplete:preloaderComplete,
     onProgress:preloaderProgressHandler
 });
 
+
 // Add files you wish to preload like so
-//preloader.add(&lt;unique_id&gt;,&lt;path&gt;,&lt;type css|javascript|image|*&gt;);
+/*
+myPreloader.add({
+    id:&lt;unique_id&gt;,
+    url:&lt;url&gt;,
+    type:&lt;type css|javascript|image|*&gt;
+});
+*/
 
+myPreloader.add({url:&quot;includes/css/aftc/aftc1.css&quot;,type:&quot;css&quot;});
+myPreloader.add({url:&quot;includes/css/aftc/aftc2.css&quot;,type:&quot;css&quot;});
+myPreloader.add({url:&quot;includes/css/aftc/aftc3.css&quot;,type:&quot;css&quot;});
 
-preloader.add(&quot;css1&quot;,&quot;includes/css/aftc/aftc1.css&quot;,&quot;css&quot;);
-preloader.add(&quot;css2&quot;,&quot;includes/css/aftc/aftc2.css&quot;,&quot;css&quot;);
-preloader.add(&quot;css3&quot;,&quot;includes/css/aftc/aftc3.css&quot;,&quot;css&quot;);
+myPreloader.add({url:&quot;includes/js/misc/lodash.min.js&quot;,type:&quot;javascript&quot;});
+myPreloader.add({url:&quot;includes/js/DTools.js&quot;,type:&quot;javascript&quot;});
 
-preloader.add(&quot;js1&quot;,&quot;includes/js/misc/lodash.min.js&quot;,&quot;javascript&quot;);
-preloader.add(&quot;js2&quot;,&quot;includes/js/DTools.js&quot;,&quot;javascript&quot;);
+myPreloader.add({url:&quot;images/img1.png&quot;,type:&quot;image&quot;});
+myPreloader.add({url:&quot;images/img2.jpg&quot;,type:&quot;image&quot;});
+myPreloader.add({url:&quot;images/img3.gif&quot;,type:&quot;image&quot;});
 
-preloader.add(&quot;img1&quot;,&quot;images/img1.png&quot;,&quot;image&quot;);
-preloader.add(&quot;img2&quot;,&quot;images/img2.jpg&quot;,&quot;image&quot;);
-preloader.add(&quot;img3&quot;,&quot;images/img3.gif&quot;,&quot;image&quot;);
+myPreloader.add({url:&quot;assets/xxxxx.xxx&quot;,type:&quot;json&quot;});
+myPreloader.add({url:&quot;assets/xxxxx.xxx&quot;,type:&quot;xml&quot;});
+myPreloader.add({url:&quot;assets/xxxxx.xxx&quot;,type:&quot;obj&quot;});
+myPreloader.add({url:&quot;assets/xxxxx.xxx&quot;,type:&quot;mtl&quot;});
+myPreloader.add({url:&quot;assets/xxxxx.xxx&quot;,type:&quot;font&quot;});
 
-preloader.add(&quot;MyUid1&quot;,&quot;assets/xxxxx.xxx&quot;,&quot;json&quot;);
-preloader.add(&quot;MyUid1&quot;,&quot;assets/xxxxx.xxx&quot;,&quot;xml&quot;);
-preloader.add(&quot;MyUid1&quot;,&quot;assets/xxxxx.xxx&quot;,&quot;obj&quot;);
-preloader.add(&quot;MyUid1&quot;,&quot;assets/xxxxx.xxx&quot;,&quot;mtl&quot;);
-preloader.add(&quot;MyUid1&quot;,&quot;assets/xxxxx.xxx&quot;,&quot;font&quot;);
-
-preloader.start();
+myPreloader.start();
 </code></pre><h2 id="uage-of-ondemand-loading">Uage of onDemand loading</h2>
-<pre><code>    preloader.loadNow(&quot;includes/js/JavaScriptFile.js&quot;, function () {
+<pre><code>    myPreloader.loadNow(&quot;includes/js/JavaScriptFile.js&quot;, function () {
         // Do what you want
     });
 </code></pre><p>or </p>
 <pre><code>    function myOnCompleteFunction(){
         // Do what you want
     }
-    preloader.loadNow(&quot;includes/js/JavaScriptFile.js&quot;, myOnCompleteFunction);
+    myPreloader.loadNow(&quot;includes/js/JavaScriptFile.js&quot;, myOnCompleteFunction);
 </code></pre>
       </body>
     </html>
