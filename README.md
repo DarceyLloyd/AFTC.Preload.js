@@ -24,7 +24,7 @@ Any files which are not of type JavaScript, will be put into the batch loader. D
 
 ## Usage
 ```
-var preloader = new AFTC.Preloader({
+var myPreloader = new AFTC.Preloader({
     onComplete:<YourOnCompleteFunction>,
     onProgress:<YourOnProgressFunction>,
     batchSize:<NoOfFileYouWishToPreloadAtATime>
