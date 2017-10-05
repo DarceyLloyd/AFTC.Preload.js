@@ -9,7 +9,7 @@ Why did I make this? PreloadJS was not on it's own and I didn't want all that ot
 ### OnDemand loading of JavaScript files
 Simply load and integrate a JavaScript file anywhere in your code, with on complete callback feature.
 ```
-preloader.loadNow(url,onCompleteFunction);
+myPreloader.loadNow(url,onCompleteFunction);
 ```
 
 ### Sequential JavaScript file preloading and DOM attachment
