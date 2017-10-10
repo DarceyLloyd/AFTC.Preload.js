@@ -1,7 +1,6 @@
 /*
  * Author: Darcey@AllForTheCode.co.uk
- * Version: 1.0.1
- * https://w3c.github.io/preload/
+ * Version: 1.0.3
 */
 
 // Ensure my lazy logger is available
@@ -31,21 +30,28 @@ AFTC.Preloader = function () {
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 
+
+
     // Process arguments
-    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     if (arguments[0] && typeof (arguments[0]) == "object") {
 
         for (var key in arguments[0]) {
             if (arguments[0].hasOwnProperty(key)) {
                 params[key] = arguments[0][key];
+            } else {
+                if (console) {
+                    if (console.error) {
+                        console.error("AFTC.Preload: ERROR: Unknown paramater: [" + key + "]");
+                    }
+                }
             }
         }
-
-        // if (arguments[0].onComplete) { params.onComplete = arguments[0].onComplete; }
-        // if (arguments[0].onProgress) { params.onProgress = arguments[0].onProgress; }
-        // if (arguments[0].batchSize) { params.batchSize = arguments[0].batchSize; }
     }
+    // if (arguments[0].onComplete) { params.onComplete = arguments[0].onComplete; }
+    // if (arguments[0].onProgress) { params.onProgress = arguments[0].onProgress; }
+    // if (arguments[0].batchSize) { params.batchSize = arguments[0].batchSize; }
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
 
 
 
@@ -61,10 +67,12 @@ AFTC.Preloader = function () {
         // Do counts for certain file types
         for (var i = 0; i < params.que.length; i++) {
             var queItem = params.que[i];
-            if (queItem.type == "javascript") {
+            var ext = queItem.url.split('.').pop();
+
+            if (ext == "js") {
                 params.noOfJSFiles++;
             }
-            if (queItem.type == "css") {
+            if (ext == "css") {
                 params.noOfCSSFiles++;
             }
         }
@@ -85,6 +93,8 @@ AFTC.Preloader = function () {
             var queItem = params.que[i];
             if (!queItem.preloading && !queItem.preloaded) {
 
+                var ext = queItem.url.split('.').pop();
+
                 // Process order
                 // 1. JavaScript
                 // 2. CSS (No need - but left in just encase)
@@ -94,7 +104,7 @@ AFTC.Preloader = function () {
                 if (params.noOfJSFilePreloaded < params.noOfJSFiles) {
                     //log("AFTC.preload.getItemFromQue(): JavaScript files:  noOfJSFilePreloaded:" + params.noOfJSFilePreloaded + "  noOfJSFiles:" + params.noOfJSFiles);
                     // JS
-                    if (queItem.type == "javascript") {
+                    if (ext == "js") {
                         queItem.preloading = true;
                         queItem.index = i;
                         return queItem;
@@ -102,7 +112,7 @@ AFTC.Preloader = function () {
                     // } else if (params.noOfCSSFilesPreloaded < params.noOfCSSFiles) {
                     //     log("AFTC.preload.getItemFromQue(): CSS files:  noOfCSSFilesPreloaded:" + params.noOfCSSFilesPreloaded + "  noOfCSSFiles:" + params.noOfCSSFiles);
                     //     // CSS
-                    //     if (queItem.type == "css") {
+                    //     if (ext == "css") {
                     //         queItem.preloading = true;
                     //         queItem.index = i;
                     //         return queItem;
@@ -110,8 +120,8 @@ AFTC.Preloader = function () {
                 } else {
                     //log("AFTC.preload.getItemFromQue(): Generic");
                     // Any file type other than JS and CSS
-                    //if (queItem.type != "javascript" && queItem.type != "css") {
-                    if (queItem.type != "javascript") {
+                    //if (ext != "javascript" && ext != "css") {
+                    if (ext != "js") {
                         queItem.preloading = true;
                         queItem.index = i;
                         return queItem;
@@ -198,6 +208,17 @@ AFTC.Preloader = function () {
     function preloadFile(queItem) {
         //log("AFTC.preload.preloadFile(): " + queItem.url);
         //log(queItem);
+        if (queItem.url == "" || queItem.url == null) {
+            var msg = "# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #\n";
+            msg += "AFTC.Preloader.preloadFile(): ERROR! \n";
+            msg += "queItem.url: [" + queItem.url + "]" + "\n";
+            msg += "queItem.id: [" + queItem.id + "]" + "\n";
+            msg += "queItem.preloading: [" + queItem.preloading + "]" + "\n";
+            msg += "queItem.preloaded: [" + queItem.preloaded + "]" + "\n";
+            msg += "# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #";
+            console.error(msg);
+            return -1;
+        }
 
         var ext = queItem.url.split('.').pop();
 
@@ -207,7 +228,7 @@ AFTC.Preloader = function () {
                 //log("AFTC.preload.preloadFile(): Sucesss: " + queItem.url);
 
                 // Attach any JavaScript to the page that is on the preload list
-                if (queItem.type == "javascript") {
+                if (ext == "js") {
                     var script = document.createElement('script');
                     script.onload = function () {
                         // Load & Parse Complete, Next!
@@ -222,7 +243,7 @@ AFTC.Preloader = function () {
                     script.src = queItem.url;
                     document.head.appendChild(script); //or something of the likes
 
-                } else if (queItem.type == "css") {
+                } else if (ext == "css") {
                     var head = document.getElementsByTagName('head')[0];
                     var link = document.createElement('link');
                     //link.id   = cssId;
@@ -255,7 +276,7 @@ AFTC.Preloader = function () {
             },
             error: function (a, b, c) {
                 var msg = "# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #\n";
-                msg += "AFTC.preload(): ERROR: PRELOADER STOPPED! \n";
+                msg += "AFTC.Preloader.preloadFile(): ERROR! \n";
                 msg += "Error on [" + queItem.url + "]" + "\n";
                 msg += "Error [" + b + "]" + "\n";
                 msg += "Error [" + c + "]" + "\n";
@@ -329,7 +350,7 @@ AFTC.Preloader = function () {
             },
             error: function (a, b, c) {
                 var msg = "# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #\n";
-                msg += "AFTC.preload.loadNow(): !ERROR! \n";
+                msg += "AFTC.Preloader.loadNow(): !ERROR! \n";
                 msg += "Error on [" + url + "]" + "\n";
                 msg += "Error [" + b + "]" + "\n";
                 msg += "Error [" + c + "]" + "\n";
@@ -385,24 +406,31 @@ AFTC.Preloader = function () {
             var o = {
                 id: null,
                 url: "",
-                type: null,
+                //type: null,
                 preloading: false,
                 preloaded: false,
                 index: -1,
                 batchIndex: -1
             }
 
-            // Process object arguments
+            // Process arguments
             if (arguments[0] && typeof (arguments[0]) == "object") {
 
                 for (var key in arguments[0]) {
                     if (arguments[0].hasOwnProperty(key)) {
                         o[key] = arguments[0][key];
+                    } else {
+                        console.error("AFTC.Preloader.add(): ERROR: Unknown paramater: [" + key + "]");
                     }
                 }
             }
-
-            params.que.push(o);
+        
+            if (o.url != null || o.url != ""){
+                params.que.push(o);
+            } else {
+                console.error("AFTC.Preloader.add(): ERROR: Incorrect use of AFTC.Preloader.add() function! No url object passed!");
+            }
+            
         },
 
         start: function () {

@@ -1,0 +1,27 @@
+{
+  "name": "aftc.preload",
+  "version": "1.0.3",
+  "description": "A quick and to the point preloader.",
+  "main": "index.js",
+  "scripts": {
+    "build": "gulp build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DarceyLloyd/AFTC.Preload.js.git"
+  },
+  "author": "darcey.lloyd@gmail.com",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/DarceyLloyd/AFTC.Preload.js/issues"
+  },
+  "homepage": "https://github.com/DarceyLloyd/AFTC.Preload.js#readme",
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-concat": "^2.6.1",
+    "gulp-uglify": "^3.0.0"
+  },
+  "dependencies": {
+    "jquery": "^1.12.4"
+  }
+}
