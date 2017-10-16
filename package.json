@@ -1,10 +1,11 @@
 {
   "name": "aftc.preload",
-  "version": "1.0.3",
+  "version": "1.1.0",
   "description": "A quick and to the point preloader.",
   "main": "index.js",
   "scripts": {
-    "build": "gulp build"
+    "build": "gulp build",
+    "buildtest" : "node testing/build.js"
   },
   "repository": {
     "type": "git",
@@ -17,11 +18,14 @@
   },
   "homepage": "https://github.com/DarceyLloyd/AFTC.Preload.js#readme",
   "devDependencies": {
+    "aftc.js": "^1.0.1",
     "gulp": "^3.9.1",
     "gulp-concat": "^2.6.1",
     "gulp-uglify": "^3.0.0"
   },
   "dependencies": {
+    "axios": "^0.16.2",
+    "fetch": "^1.1.0",
     "jquery": "^1.12.4"
   }
 }

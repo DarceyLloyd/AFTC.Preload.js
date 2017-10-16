@@ -7,99 +7,125 @@ AFTC.Preload is a quick, no fuss, easy to use preloader.
 PreloadJS was not on it's own and I didn't want all that other nonsense that comes with it. I Just wanted a quick and easy preloader, so I made one.
 
 
-# Features
-
-## Sequential JavaScript loading and DOM integration
-Sequence matters, JavaScript files will be loading in sequence, this allows scripts which are dependent on other scripts to be available first to be loaded without error. SEQUENCE MATTERS!
-
-## Batch loading
-All files which are not JavaScrit will get preloaded via XHQR (jquery), I will leave jQuery handle any fallbacks. CSS files are added to the DOM as soon as they are loaded.
+### Dependencies
+<b>None, AFTC.PreloadJS now has it's own xhr functions.</b>
 
 
-## OnDemand loading of JavaScript files
-Load and use any non loaded JavaScript file into your page / application at any time. To ensure you only start coding for it when it is available specify an onCompleteFunction / callback function.
+### Preloader - cache:true||false
 ```
-myPreloader.loadNow(url,onCompleteFunction);
+// Allow the browser to cache all files or disable caching alltogether 
+cache true|| false
 ```
 
-## CSS Dom attachment
-Any CSS files you add to the preloader will be added to the DOM once they have been preloaded to ensure styles are available.
-
-## Batch loading
-Any files which are not of type JavaScript, will be put into the batch loader. Default is to attempt to load 4 items at a time, you can change this via constructor argument, see usage.
-
-
-## Usage
+### Preloader - batchSize:number
 ```
-var myPreloader = new AFTC.Preloader({
-    onComplete:<YourOnCompleteFunction>,
-    onProgress:<YourOnProgressFunction>,
-    batchSize:<NoOfFileYouWishToPreloadAtATime>
+// Batch size, number of items to preload at the same time
+bathSize:number
+```
+
+### Preloader - attachImagesToDom:true||false
+```
+// Want to dump all loaded images into a dom element?
+attachImagesToDom:true
+domElementToAttachImagesTo:string(element id)
+```
+
+
+### Preloader.add({params})
+```
+.add({
+id:string,
+url:string,
+cache:boolean
 });
+
+// ID must be unique (used for svg, json & xml retrieval (only svg is implemented at the moment, but caching is working fine)
+// Cache is per a file basis
 ```
 
 
-## Example 
+### myPreloader.getSVGById(id:string)
+```
+// Example of how to retrieve an SVG and access its DOM
+// NOTE: SVG Attached via preloader image attachment is image tag based and its DOM is not accessible
+// To access an SVG you need to retrieve the SVG as a string from the preloader via getSVGById
+// Then inject it into the DOM of your page via innerHTML, eg see below (make sure you set ids correctly on svg)
+
+// Attach SVG to DOM
+var mySVG = myPreloader.getSVGById("svg1");
+var svgContainer1 = document.querySelector("#svgDebug .svgContainer1");
+svgContainer1.innerHTML = mySVG;
+
+var svgInSVGContainer1 = document.getElementById("testSVG1");
+svgInSVGContainer1.setAttribute("width","300px");
+svgInSVGContainer1.setAttribute("height","300px");
+
+var svgLayer1 = document.querySelector("#testSVG1 #Layer1"); // Example of using querySelector
+var svgLayer2 = document.getElementById("Layer2"); // Example of using getElementBy
+```
+
+
+
+## Basic usage
 ```
 function preloaderComplete(){
     console.log("Preloader has completed!");
 }
-function preloaderProgressHandler(p){
-    console.log("PreloaderProgressHandler(): Percent loaded = " + p);
+
+function preloaderProgressHandler(obj){
+    console.log("PreloaderProgressHandler(): Percent loaded = " + obj.percentLoaded);
+    // Create your progress bar here or do more (see test.htm in testing folder)
 }
 
 var myPreloader = new AFTC.Preloader({
-    onComplete:preloaderComplete,
-    onProgress:preloaderProgressHandler
+    batchSize: 5,
+    onComplete: preloaderComplete,
+    onProgress: preloaderProgressHandler,
+    cache: false,
+    attachImagesToDom: true,
+    domElementToAttachImagesTo: "imgDebug"
+
 });
+
 
 
 // Add files you wish to preload like so
 /*
 myPreloader.add({
     id:<unique_id>,
-    url:<url>,
-    type:<type css|javascript|image|*>
+    url:<url>
 });
 */
 
-myPreloader.add({url:"includes/css/aftc/aftc1.css"});
-myPreloader.add({url:"includes/css/aftc/aftc2.css"});
-myPreloader.add({url:"includes/css/aftc/aftc3.css"});
-
-myPreloader.add({url:"includes/js/misc/lodash.min.js"});
-myPreloader.add({url:"includes/js/DTools.js"});
-
-myPreloader.add({url:"images/img1.png"});
-myPreloader.add({url:"images/img2.jpg"});
-myPreloader.add({url:"images/img3.gif"});
-
-myPreloader.add({url:"assets/data.json",type:"json"});
-myPreloader.add({url:"assets/data.xml",type:"xml"});
-myPreloader.add({url:"assets/car.obj",type:"obj"});
-myPreloader.add({url:"assets/car.mtl",type:"mtl"});
-myPreloader.add({url:"assets/arial.ttf",type:"font"});
+myPreloader
+    .add({url:"includes/css/aftc/aftc1.css"});
+    .add({url: "img/img07.jpg"})
+    .add({url: "img/img08.jpg"})
+    .add({url: "img/img09.jpg"})
+    .add({url: "img/img10.jpg"})
+    .add({url: "generated/styles1.css", cache: false})
+    .add({url: "generated/styles2.css"})
+    .add({url: "generated/styles3.css"})
+    .add({url: "generated/styles4.css"});
 
 myPreloader.start();
 ```
 
 
-
-## Uage of onDemand loading
+You may also chain like so
 ```
-    myPreloader.loadNow("includes/js/JavaScriptFile.js", function () {
-        // Do what you want
-    });
-```
-
-or 
+myPreloader
+    .add({url:"includes/css/aftc/aftc4.css"})
+    .add({url:"includes/css/aftc/aftc5.css"})
+    .add({url:"includes/css/aftc/aftc6.css"})
 
 ```
-    function myOnCompleteFunction(){
-        // Do what you want
-    }
-    myPreloader.loadNow("includes/js/JavaScriptFile.js", myOnCompleteFunction);
-```
+
+
+
+### For a detailed usage example run and review the code on test.htm and test.js in the testing folder (use xampp or wamp or other server).
+
+
 
 
 <br>

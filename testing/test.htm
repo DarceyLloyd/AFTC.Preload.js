@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Darcey@AllForTheCode.co.uk - AFTC.Preload.js Development Tests</title>
+    <style>
+        html,
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 1rem;
+        }
+
+        h1,h2,h3,h4,h5,h6 {
+            margin: 5px;
+            padding: 0;
+        }
+
+        .box {
+            padding: 5px;
+            border: 1px solid #000000;
+            margin: 20px 0;
+        }
+
+        #out {
+
+        }
+
+
+
+        #css-check-1 {
+            margin: 20px 0;
+            border-top: 1px solid #000000;
+            color: #FFFFFF;
+        }
+
+        #css-check-2 {
+            margin: 20px 0;
+            border: 1px solid #000000;
+        }
+
+        .bg-red {
+            color: #FFFFFF;
+            background: #990000;
+        }
+
+        .bg-green {
+            color: #FFFFFF;
+            background: #009900;
+        }
+
+        .css-item {
+            display: inline-block;
+            margin: 0 1px 0 0;
+            padding: 2px;
+            font-size: 10px;
+            color: #FFFFFF;
+        }
+
+        .img-test {
+            width: 100px;
+            height: 100px;
+            margin: 1px;
+        }
+
+        .img-test:Hover {
+            opacity: 0.8;
+        }
+
+        #preloader .bar {
+            display: block;
+            background: #00FF00;
+            border: 1px solid #000000;
+            height: 20px;
+        }
+
+        #preloader .message {
+            text-align: center;
+            margin: 0 0 20px 0;
+        }
+
+
+        #preloader .details {
+            border: 1px solid #990000;
+        }
+
+        #preloader .details .subItem {
+            display: inline-block;
+            background: #000000;
+            color: #FFFFFF;
+            font-size: 12px;
+            margin: 1px;
+            padding: 3px;
+        }
+
+        #preloader .details .subItem .subItemTitle {
+            display: inline-block;
+        }
+
+        #preloader .details .subItem .subItemBar {
+            color: #FFFFFF;
+            text-align: center;
+        }
+    </style>
+    <script src="../dist/aftc.preload.min.js"></script>
+
+    <!--<script src="../src/aftc.preload.js"></script>-->
+    <!--<script src="../src/aftc.preload.js.js"></script>-->
+    <!--<script src="../src/aftc.preload.css.js"></script>-->
+    <!--<script src="../src/aftc.preload.img.js"></script>-->
+    <!--<script src="../src/aftc.preload.font.js"></script>-->
+    <!--<script src="../src/aftc.preload.xhr.js"></script>-->
+    <!--<script src="../src/aftc.preload.public.js"></script>-->
+    <!--<script src="../src/aftc.preload.on.js"></script>-->
+    <!--<script src="../src/aftc.preload.batch.js"></script>-->
+    <script src="test.js"></script>
+
+    <!--<link rel="stylesheet" type="text/css" href="./generated/styles1.css"/>-->
+
+</head>
+
+<body>
+    <h3>AFTC.Preload.js Development Tests</h3>
+    <h5>Darcey@AllForTheCode.co.uk</h5>
+
+    <div id="preloader" class="box">
+        <div class="bar"></div>
+        <div class="message"></div>
+
+        <div class="details"></div>
+    </div>
+
+    <div id="cssDebug" class="box">
+        <h4>CSS Debug Area:</h4>
+        <div id="css-check-1"></div>
+        <div id="css-check-2"></div>
+    </div>
+
+
+
+
+    <div id="imgDebug" class="box">
+        <h4>Image Debug Area:</h4>
+    </div>
+
+
+    <div id="svgDebug" class="box">
+        <h4>SVG Debug Area:</h4>
+        <div class="svgContainer1"></div>
+        <div class="svgContainer2"></div>
+        <div class="svgContainer3"></div>
+    </div>
+
+
+
+    <div id="jsDebug" class="box">
+        <h4>JavaScript Debug Area:</h4>
+    </div>
+
+    <script>
+        init();
+    </script>
+</body>
+
+</html>

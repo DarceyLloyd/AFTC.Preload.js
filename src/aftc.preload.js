@@ -1,463 +1,188 @@
 /*
  * Author: Darcey@AllForTheCode.co.uk
- * Version: 1.0.3
+ * Version: 1.1.0
+*/
+// Ensure my lazy logger is available
+if (!log) {
+    function log(arg) {
+        if (console) {
+            console.log(arg);
+        }
+    }
+}
+
+
+/*
+
+// Image preload mode css backgrounds with id on .add() for style id (maybe add user style injector)
+// Image preload mode js into array of img tags and retrieved on id
+
+TO DO (maybe):
+// param: jsMode : sequential || batch (handle via .add())
+// maybe 2/10 param: cssMode : ajax || standard (css files are not really that big no need for ajax)
+// param: imageMode : ajax || css || dom || js
+
+
 */
 
-// Ensure my lazy logger is available
-if (!log) { function log(arg) { if (console) { console.log(arg); } } }
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 var AFTC = AFTC || {}
 
 AFTC.Preloader = function () {
+    //log("AFTC.Preloader()");
 
     // Var defs
-    var params = {
+    this.params = {
         que: [],
+        jsQue: [],
+
+        svgs:[],
+
+        cache: true,
+
+        batch: [],
+        batchSize: 4,
+        filesInBatch: 0,
+
+        types: [], // array of {ext,count,loaded}
+
+        attachImagesToDom: false,
+        domElementToAttachImagesTo: "",
+
+        attachScriptsToDom: true,
+        attachStyleSheetsToDom: true,
+
         noOfJSFiles: 0,
         noOfJSFilePreloaded: 0,
-        noOfCSSFiles: 0,
-        noOfCSSFilesPreloaded: 0,
-        error: false,
-        batchSize: 4,
-        batch: [],
-        percentLoaded: 0,
+
+        noOfFilesToPreload: 0,
         noOfFilesLoaded: 0,
+        noOfFilesFailed: 0,
+        percentLoaded: 0,
+
+        error: false,
+
         onComplete: null,
         onProgress: null,
-        onError: null
+        onError: null,
+
+        xhrAvailable: false,
     };
-    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 
+    // File definition / Value Object
+    AFTC.Preloader.FileVo = function () {
+        this.id = null;
+        this.url = "";
+        this.urlCacheString = "";
+        this.ext = "";
+
+        this.processed = false;
+        this.done = false;
+
+        this.cache = true;
+
+        this.loading = false;
+
+        this.xhr = null;
+        this.xhrLoading = false;
+        this.xhrProgress = 0;
+        this.xhrSuccess = false;
+        this.xhrReadyState = "";
+        this.xhrStatus = 0;
+        this.xhrStatusText = "";
+        this.xhrProcessed = false;
+
+        this.isImage = false;
+        this.imgWidth = 200;
+        this.imgHeight = 150;
+        this.imgClass = null;
+
+        this.jsLoading = false; // The setup of css = createElement(link) || script = createElement(script) || img = createElement(img)
+        this.jsSuccess = false; // css.load||error = fn(); || script.load||error = fn(); || img.load||error = fn();
+        this.jsProcessed = false;
+
+        this.batchIndex = -1;
+    }
+    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 
     // Process arguments
     if (arguments[0] && typeof (arguments[0]) == "object") {
 
         for (var key in arguments[0]) {
-            if (arguments[0].hasOwnProperty(key)) {
-                params[key] = arguments[0][key];
+            if (this.params.hasOwnProperty(key)) {
+                this.params[key] = arguments[0][key];
             } else {
-                if (console) {
-                    if (console.error) {
-                        console.error("AFTC.Preload: ERROR: Unknown paramater: [" + key + "]");
-                    }
-                }
+                console.error("AFTC.Preloader: Usage Error - Unknown paramater [" + key + "]");
             }
         }
     }
-    // if (arguments[0].onComplete) { params.onComplete = arguments[0].onComplete; }
-    // if (arguments[0].onProgress) { params.onProgress = arguments[0].onProgress; }
-    // if (arguments[0].batchSize) { params.batchSize = arguments[0].batchSize; }
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 
-
-
-
-    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    function start() {
-        //console.log("AFTC.preload.start()");
-
-        params.noOfFilesLoaded = 0;
-        params.noOfJSFiles = 0;
-        params.noOfCSSFiles = 0;
-
-        // Do counts for certain file types
-        for (var i = 0; i < params.que.length; i++) {
-            var queItem = params.que[i];
-            var ext = queItem.url.split('.').pop();
-
-            if (ext == "js") {
-                params.noOfJSFiles++;
-            }
-            if (ext == "css") {
-                params.noOfCSSFiles++;
-            }
-        }
-
-        batchProcessor();
+    // Check if jQuery is available
+    if (typeof jQuery == 'undefined') {
+        // jQuery is not loaded 
+        //log("AFTC.Preloader: jQuery is not available");
+    } else {
+        // jQuery is loaded
+        //log("AFTC.Preloader: jQuery is available!");
     }
-    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-
-
 
 
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    function getItemFromQue() {
-        //log("AFTC.preload.getItemFromQue()");
+    this.init = function () {
+        //log("AFTC.Preloader.init()");
 
-        for (var i = 0; i < params.que.length; i++) {
-            var queItem = params.que[i];
-            if (!queItem.preloading && !queItem.preloaded) {
+        // var ini
+        this.params.noOfFilesToPreload = (this.params.que.length + this.params.jsQue.length);
+        this.params.noOfJSFilePreloaded = 0;
+        this.params.noOfJSFiles = this.params.jsQue.length;
+        this.params.noOfFilesLoaded = 0;
+        this.params.noOfFilesFailed = 0;
+        this.params.percentLoaded = 0;
 
-                var ext = queItem.url.split('.').pop();
-
-                // Process order
-                // 1. JavaScript
-                // 2. CSS (No need - but left in just encase)
-                // 3. Everything else
-
-                // Are we looking for "javascript", "css" or * file types
-                if (params.noOfJSFilePreloaded < params.noOfJSFiles) {
-                    //log("AFTC.preload.getItemFromQue(): JavaScript files:  noOfJSFilePreloaded:" + params.noOfJSFilePreloaded + "  noOfJSFiles:" + params.noOfJSFiles);
-                    // JS
-                    if (ext == "js") {
-                        queItem.preloading = true;
-                        queItem.index = i;
-                        return queItem;
-                    }
-                    // } else if (params.noOfCSSFilesPreloaded < params.noOfCSSFiles) {
-                    //     log("AFTC.preload.getItemFromQue(): CSS files:  noOfCSSFilesPreloaded:" + params.noOfCSSFilesPreloaded + "  noOfCSSFiles:" + params.noOfCSSFiles);
-                    //     // CSS
-                    //     if (ext == "css") {
-                    //         queItem.preloading = true;
-                    //         queItem.index = i;
-                    //         return queItem;
-                    //     }
-                } else {
-                    //log("AFTC.preload.getItemFromQue(): Generic");
-                    // Any file type other than JS and CSS
-                    //if (ext != "javascript" && ext != "css") {
-                    if (ext != "js") {
-                        queItem.preloading = true;
-                        queItem.index = i;
-                        return queItem;
-                    }
-                }
-
-            }
+        // init batch array with nulls
+        for (var b=0; b < this.params.batchSize; b++){
+            this.params.batch[b] = null;
         }
 
-        // Got here? Que is complete mark it as complete and run this
-        return null;
-    }
-    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-
-
-
-
-    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    function batchProcessor() {
-        if (params.error) {
-            onError();
-            return false;
-        }
-
-        //log("AFTC.preload.batchProcessor()");
-
-
-        var allBatchItemsNull = true,
-            queItem;
-
-        if (params.noOfJSFilePreloaded < params.noOfJSFiles) {
-            // We want singular sequential execution to maintain load and execute sequence
-            queItem = getItemFromQue();
-            preloadFile(queItem);
+        // XHR Check
+        var xhrTemp;
+        if (XMLHttpRequest) {
+            xhrTemp = new XMLHttpRequest()
         } else {
-            // We can preload in batchs when type is not javascript
-
-            // Debug
-            var batchesInUse = 0;
-            for (var i = 0; i < params.batchSize; i++) {
-                if (params.batch[i] != null) {
-                    batchesInUse++;
-                }
-            }
-
-            //log("----BATCH---- " + batchesInUse + "/" + (params.batchSize-1));
-            //log(params.batch);
-
-            // This calls loaders on each iteration, resulting in sequential loading
-            for (var i = 0; i < params.batchSize; i++) {
-                if (params.batch[i] == null) {
-                    queItem = getItemFromQue();
-
-                    if (queItem != null) {
-                        //log("--- Attaching " + queItem.url + " to batch @ [" + i + "]");
-                        queItem.batchIndex = i; // Once preloading completes we need to remove it from batch
-                        params.batch[i] = queItem;
-                        preloadFile(queItem);
-                    }
-                }
-
-                if (params.batch[i] != null) {
-                    allBatchItemsNull = false;
-                }
-            }
-
-
-            if (allBatchItemsNull) {
-                onComplete();
-            }
-
+            xhrTemp = new ActiveXObject('Microsoft.XMLHTTP')
         }
 
-
-
-
-    }
-    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-
-
-    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    function preloadFile(queItem) {
-        //log("AFTC.preload.preloadFile(): " + queItem.url);
-        //log(queItem);
-        if (queItem.url == "" || queItem.url == null) {
-            var msg = "# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #\n";
-            msg += "AFTC.Preloader.preloadFile(): ERROR! \n";
-            msg += "queItem.url: [" + queItem.url + "]" + "\n";
-            msg += "queItem.id: [" + queItem.id + "]" + "\n";
-            msg += "queItem.preloading: [" + queItem.preloading + "]" + "\n";
-            msg += "queItem.preloaded: [" + queItem.preloaded + "]" + "\n";
-            msg += "# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #";
-            console.error(msg);
-            return -1;
+        if (xhrTemp) {
+            this.params.xhrAvailable = true;
+            xhrTemp = "";
+            delete xhrTemp;
         }
 
-        var ext = queItem.url.split('.').pop();
+        ////log(this.params.que);
 
-        $.ajax({
-            url: queItem.url,
-            success: function () {
-                //log("AFTC.preload.preloadFile(): Sucesss: " + queItem.url);
-
-                // Attach any JavaScript to the page that is on the preload list
-                if (ext == "js") {
-                    var script = document.createElement('script');
-                    script.onload = function () {
-                        // Load & Parse Complete, Next!
-                        queItem.preloading = false;
-                        queItem.preloaded = true;
-                        params.noOfJSFilePreloaded++;
-                        params.noOfFilesLoaded++;
-                        //log("AFTC.preload.preloadFile(): JS File [" + queItem.url + "] has been attached to the DOM!");
-                        onItemLoaded(queItem);
-                        batchProcessor();
-                    };
-                    script.src = queItem.url;
-                    document.head.appendChild(script); //or something of the likes
-
-                } else if (ext == "css") {
-                    var head = document.getElementsByTagName('head')[0];
-                    var link = document.createElement('link');
-                    //link.id   = cssId;
-                    link.rel = 'stylesheet';
-                    link.type = 'text/css';
-                    link.href = queItem.url;
-                    link.media = 'all';
-                    link.onload = function () {
-                        // Load & Parse Complete, Next!
-                        queItem.preloading = false;
-                        queItem.preloaded = true;
-                        params.noOfCSSFilesPreloaded++;
-                        params.batch[queItem.batchIndex] = null;
-                        params.noOfFilesLoaded++;
-                        //log("AFTC.preload.preloadFile(): CSS File [" + queItem.url + "] has been attached to the DOM!");
-                        onItemLoaded(queItem);
-                        batchProcessor();
-                    };
-                    head.appendChild(link);
-                } else {
-                    queItem.preloading = false;
-                    queItem.preloaded = true;
-                    params.batch[queItem.batchIndex] = null;
-                    params.noOfFilesLoaded++;
-                    onItemLoaded(queItem);
-                    batchProcessor();
-                }
+        // var Img10mb = "./img/big.jpg"; //"http://dev.aftc.co.uk/img/big.jpg";
+        //var file1 = {url:"./img/img01.jpg"}
+        //var file2 = {url:"./img/img02.jpg"}
+        //this.xhrOpen(file1);
+        //this.xhrOpen(file2);
 
 
-            },
-            error: function (a, b, c) {
-                var msg = "# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #\n";
-                msg += "AFTC.Preloader.preloadFile(): ERROR! \n";
-                msg += "Error on [" + queItem.url + "]" + "\n";
-                msg += "Error [" + b + "]" + "\n";
-                msg += "Error [" + c + "]" + "\n";
-                msg += "# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #";
-                console.error(msg);
-                params.error = true;
-            }
-        });
+        // We are going to run both the batch loader and the javascript sequence loader at the same time
 
+        // JavaScript Sequential loader
+        //this.preloadJS();
+        //batchProcessor();
 
-    }
-    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-
-
-    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    function loadNow(url, onComplete) {
-        //log("AFTC.preload.loadNow(url,onComplete): " + url);
-
-        if (typeof (url) == "array") {
-            for (var i = 0; i < url.length; i++) {
-                if (i = (url.length - 1)) {
-                    loadNow(url[i], onComplete);
-                } else {
-                    loadNow(url[i], null);
-                }
-
-            }
-            return;
-        }
-
-        var ext = url.split('.').pop();
-
-        $.ajax({
-            url: url,
-            success: function () {
-                //log("AFTC.preload.loadNow(): Sucesss: " + url);
-
-                // Attach any JavaScript to the page that is on the preload list
-                if (ext == "js") {
-                    var script = document.createElement('script');
-                    script.onload = function () {
-                        if (onComplete || onComplete != undefined) {
-                            onComplete();
-                        }
-                    };
-                    script.src = url;
-                    document.head.appendChild(script); //or something of the likes
-
-                } else if (ext == "css") {
-                    var head = document.getElementsByTagName('head')[0];
-                    var link = document.createElement('link');
-                    //link.id   = cssId;
-                    link.rel = 'stylesheet';
-                    link.type = 'text/css';
-                    link.href = queItem.url;
-                    link.media = 'all';
-                    link.onload = function () {
-                        if (onComplete || onComplete != undefined) {
-                            onComplete();
-                        }
-                    };
-                    head.appendChild(link);
-                } else {
-                    if (onComplete || onComplete != undefined) {
-                        onComplete();
-                    }
-                }
-
-
-            },
-            error: function (a, b, c) {
-                var msg = "# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #\n";
-                msg += "AFTC.Preloader.loadNow(): !ERROR! \n";
-                msg += "Error on [" + url + "]" + "\n";
-                msg += "Error [" + b + "]" + "\n";
-                msg += "Error [" + c + "]" + "\n";
-                msg += "# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #";
-                console.error(msg);
-                params.error = true;
-            }
-
-        });
-    }
-    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-
-
-    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    function onComplete() {
-        //log("AFTC.preload.onComplete()");
-
-        if (params.onComplete) {
-            params.onComplete();
-        }
-    }
-    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-
-    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    function onError() {
-        if (params.onError) {
-            params.onError();
-        }
-    }
-    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-
-    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    function onItemLoaded(item) {
-        //log("AFTC.preload.onItemLoaded(): " + item.url);
-        params.percentLoaded = ((100 / params.que.length) * params.noOfFilesLoaded) * 100;
-        params.percentLoaded = Math.round(params.percentLoaded) / 100;
-        //log("AFTC.preload.onItemLoaded(): percentLoaded: " + params.percentLoaded);
-        if (params.onProgress) {
-            params.onProgress(params.percentLoaded);
-        }
-    }
-    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-
-
-    // Public / Return exposed
-    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    return {
-        add: function () {
-            var o = {
-                id: null,
-                url: "",
-                //type: null,
-                preloading: false,
-                preloaded: false,
-                index: -1,
-                batchIndex: -1
-            }
-
-            // Process arguments
-            if (arguments[0] && typeof (arguments[0]) == "object") {
-
-                for (var key in arguments[0]) {
-                    if (arguments[0].hasOwnProperty(key)) {
-                        o[key] = arguments[0][key];
-                    } else {
-                        console.error("AFTC.Preloader.add(): ERROR: Unknown paramater: [" + key + "]");
-                    }
-                }
-            }
-        
-            if (o.url != null || o.url != ""){
-                params.que.push(o);
-            } else {
-                console.error("AFTC.Preloader.add(): ERROR: Incorrect use of AFTC.Preloader.add() function! No url object passed!");
-            }
-            
-        },
-
-        start: function () {
-            start();
-        },
-
-        noOfFilesLoaded: function () {
-            return params.noOfFilesLoaded;
-        },
-
-        percent: function () {
-            return params.percentLoaded;
-        },
-
-        debug: function () {
-            log("");
-            log("AFTC Preloader:");
-            log(params);
-            log("");
-        },
-
-        loadNow: function (url, onComplete) {
-            loadNow(url, onComplete);
-        }
+        // Start the batch preloading by getting the first batch to preload
+        this.getBatchFilesToLoad();
     }
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 
 }
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
