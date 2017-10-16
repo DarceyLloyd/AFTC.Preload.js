@@ -1,7 +1,7 @@
 # AFTC.PreloadJS
 [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=Darcey%2eLloyd%40gmail%2ecom&lc=GB&item_name=Darcey%20Lloyd%20Developer%20Donation&currency_code=GBP&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted)
 
-###AFTC.Preload is a light weight (9kb), quick, no fuss and easy to use preloader with advanced features should you want to use them.
+### AFTC.Preload is a light weight (9kb), quick, no fuss and easy to use preloader with advanced features should you want to use them.
 
 ## Why did I make this? 
 I wanted something quick and easy, just like a preloader should be with no other nonsense that came with it.
