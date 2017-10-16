@@ -1,14 +1,35 @@
 # AFTC.PreloadJS
 [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=Darcey%2eLloyd%40gmail%2ecom&lc=GB&item_name=Darcey%20Lloyd%20Developer%20Donation&currency_code=GBP&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted)
 
-AFTC.Preload is a quick, no fuss, easy to use preloader.
+###AFTC.Preload is a light weight (9kb), quick, no fuss and easy to use preloader with advanced features should you want to use them.
 
 ## Why did I make this? 
-PreloadJS was not on it's own and I didn't want all that other nonsense that comes with it. I Just wanted a quick and easy preloader, so I made one.
+I wanted something quick and easy, just like a preloader should be with no other nonsense that came with it.
+
+Can't get simpler than:
+```
+function myStuffHasLoaded(){
+// Preloader complete do your thing
+}
+var myPreloader = new AFTC.Preloader({onComplete:myStuffHasLoaded);
+myPreloader
+   .add({url:"images/img1.jpg"})
+   .add({url:"js/script1.js"})
+   .add({url:"css/styles1.css"})
+   .add({url:"data/country_codes.json"});
+myPreloader.start();
+``` 
+
+
+### What's new
+<b>jQuery is no longer required for xhr preloading, I have now written my own xhr functions.</b>
 
 
 ### Dependencies
-<b>None, AFTC.PreloadJS now has it's own xhr functions.</b>
+<b>None, just include aftc.preload.js and your good to go.</b>
+
+### Compatibility
+I've tested it on FireFox, Chrome, IE, Edge and Opera, as well as mobile versions including safari and all appeard to be fine. NOTE XHR is a requirement, but if it's unavailable it will preload DOM attachable file types only, eg images, css and javascript.
 
 
 ### Preloader - cache:true||false
@@ -75,6 +96,7 @@ function preloaderComplete(){
 function preloaderProgressHandler(obj){
     console.log("PreloaderProgressHandler(): Percent loaded = " + obj.percentLoaded);
     // Create your progress bar here or do more (see test.htm in testing folder)
+    console.log(obj); // see what's available to you in console
 }
 
 var myPreloader = new AFTC.Preloader({
