@@ -4,7 +4,7 @@
 ### AFTC.Preload is a light weight (9kb), quick, no fuss, easy to use preloader with advanced features should you want to use them.
 
 ### Working example can be seen here:
-http://dev.aftc.co.uk/git/AFTC.Preload.js/testing/test.htm
+https://darceylloyd.github.io/aftc.preload.js/testing
 
 ## Why did I make this? 
 I wanted something quick and easy, just like a preloader should be with no other nonsense that came with it.
