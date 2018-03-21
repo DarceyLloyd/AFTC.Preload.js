@@ -203,7 +203,7 @@ AFTC.Preloader.prototype.xhrLoadEndHandler = function (e) {
         } else {
             //log("3");
             fileVo.done = true;
-            me.params.noOfFilesFailed++;
+            me.params.noOfFilesLoaded++;
             me.removeFileFromBatch(fileVo);
         }
     }
