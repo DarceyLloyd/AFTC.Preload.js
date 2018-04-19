@@ -10,7 +10,7 @@ and
 
 http://dev.aftc.io/git/AFTC.Preload.js/testing/simple.htm
 
-## Why did I make this? 
+## Why did I make this?
 I wanted something quick and easy, just like a preloader should be with no other nonsense that came with it.
 
 ### 1. Setup and Start the preload:
@@ -39,11 +39,13 @@ function onProgressHandler(e) {
 
 ### 3. Preloading is complete! How to use your assets
 ```
-// CSS is attached to the DOM on load complete (so careful with sequence or you will end up using !important a lot)
+// CSS is attached to the DOM on load complete
+// (add sequence matters if you override lots of styles)
 
-// JS is attached to the DOM on load complete and executed (so careful with sequence if your coding on global scope)
+// JS is attached to the DOM on load complete and executed
+// (add sequence is important if coding on global scope)
 
-// The rest relies on the browser cache, do your stuff as normal
+// The rest relies on the browser cache, code as normal
 
 function onCompleteHandler(){
     // Preloader complete
@@ -54,7 +56,7 @@ function onCompleteHandler(){
     img1.width = 100;
     img1.height = 100;
     log("img1 = " + img1);
-    dump.appendChild(img1);
+    document.getElementById("image-container").appendChild(img1);
 
     // Example of retrieving JSON data from the preloader
     var data1 = JSON.parse(preloader.getItemById("json1"));
@@ -72,11 +74,11 @@ function onCompleteHandler(){
     svg1Container.style.width = "150px";
     svg1Container.style.height = "150px";
     svg1Container.innerHTML = svg1;
-    dump.appendChild(svg1Container);
+    document.getElementById("logo").appendChild(svg1Container);
 
-    
+
 }
-``` 
+```
 
 
 ### Dependencies
@@ -94,7 +96,7 @@ I've tested it on FireFox, Chrome, IE, Edge and Opera, as well as mobile version
 
 ### cache:true||false
 ```
-// Allow the browser to cache all files or disable caching alltogether 
+// Allow the browser to cache all files or disable caching alltogether
 var myPreloader = new AFTC.Preloader({cache:true});
 ```
 
@@ -131,7 +133,7 @@ var myPreloader = new AFTC.Preloader({
 ## Most common usage example:
 Please see tests/simple.htm
 ```
-var preloader, percentage, imageDump;
+var preloader, percentage, imgContainer;
 
 function onCompleteHandler() {
     log("onCompleteHandler()");
@@ -142,7 +144,7 @@ function onCompleteHandler() {
     img1.width = 100;
     img1.height = 100;
     log("img1 = " + img1);
-    dump.appendChild(img1);
+    imgContainer.appendChild(img1);
 
     // Example of retrieving JSON data from the preloader
     var data1 = JSON.parse(preloader.getItemById("json1"));
@@ -160,7 +162,7 @@ function onCompleteHandler() {
     svg1Container.style.width = "150px";
     svg1Container.style.height = "150px";
     svg1Container.innerHTML = svg1;
-    dump.appendChild(svg1Container);
+    imgContainer.appendChild(svg1Container);
 }
 
 
@@ -177,7 +179,7 @@ onReady(function () {
 
     // Var defs
     percentage = document.getElementById("percentage");
-    imageDump = document.getElementById("dump");
+    imgContainer = document.getElementById("content");
 
     preloader = new AFTC.Preloader({
         batchSize: 3,
@@ -217,7 +219,7 @@ onReady(function () {
 html
 ```
 <h2 id="percentage"></h2>
-<div id="dump" class="box"></div>
+<div id="content" class="box"></div>
 <div id="out" class="box"></div>
 ```
 
@@ -252,7 +254,7 @@ var svgLayer2 = document.getElementById("Layer2"); // Example of using getElemen
 <br>
 <br>
 
-# For more detailed usage example run and review the code on test.htm and test.js in the testing folder (use xampp or wamp or other server).
+# For more detailed usage examples please see simple.htm and complex.htm in the tests folder
 
 
 
@@ -269,5 +271,5 @@ Any and all donations to help keep active development and the lights on are more
 <br>
 <br>
 
-[![Hire](https://www.allforthecode.co.uk/images/pph_widget.jpg)](http://pph.me/Darcey)
+[![Hire](https://www.allforthecode.com/images/pph_widget.jpg)](http://pph.me/Darcey)
 
