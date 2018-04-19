@@ -271,6 +271,5 @@ Any and all donations to help keep active development and the lights on are more
 <br>
 <br>
 
-![Hire](https://www.allforthecode.com/images/pph_widget.jpg "Hire")(http://pph.me/Darcey)
 
 [Hire](http://pph.me/Darcey)
