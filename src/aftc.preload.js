@@ -1,19 +1,60 @@
-/*
- * Author: Darcey@AllForTheCode.co.uk
- * Version: 1.1.0
-*/
-// Ensure my lazy logger is available
-if (!log) {
-    function log(arg) {
-        if (console) {
-            console.log(arg);
-        }
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+var AFTC = AFTC || {}
+
+
+// From aftc.js (modified for some missing functions in aftc.js)
+function onReady(fn) {
+    // IE9+
+    if (document.readyState === "complete" || (document.readyState !== "loading" && !document.documentElement.doScroll)) {
+        fn();
+    } else {
+        document.addEventListener("DOMContentLoaded", function () {
+            // Adds a little delay but is a good thing
+            setTimeout(fn, 10);
+        });
     }
 }
 
 
-/*
+AFTC.log = {
+    enabled: true,
+    elementId: "",
+    element: false
+};
+function log(arg) {
+    if (console) {
+        if (AFTC.log.enabled) {
+            if (typeof (arg) == "undefined") {
+                console.error("AFTC.LOG(arg) ERROR: Your log variable (arg) is \"undefined\"!");
+            } else {
+                console.log(arg);
+            }
+            if (AFTC.log.element != false) {
+                if (typeof (arg) == "object") {
+                    AFTC.log.element.innerHTML += "[Object]<br>";
+                    for (var key in arg) {
+                        AFTC.log.element.innerHTML += ("&nbsp;&nbsp;&nbsp;&nbsp;" + key + " = " + arg[key] + "<br>");
+                    }
+                } else {
+                    AFTC.log.element.innerHTML += (arg + "<br>");
+                }
 
+            }
+        }
+    }
+}
+function logTo(elementOrElementId) {
+    if (elementOrElementId){
+        AFTC.log.element = document.getElementById(elementOrElementId);
+    } else {
+        AFTC.log.element = false;
+    }
+    
+}
+
+
+
+/*
 // Image preload mode css backgrounds with id on .add() for style id (maybe add user style injector)
 // Image preload mode js into array of img tags and retrieved on id
 
@@ -21,13 +62,7 @@ TO DO (maybe):
 // param: jsMode : sequential || batch (handle via .add())
 // maybe 2/10 param: cssMode : ajax || standard (css files are not really that big no need for ajax)
 // param: imageMode : ajax || css || dom || js
-
-
 */
-
-
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-var AFTC = AFTC || {}
 
 AFTC.Preloader = function () {
     //log("AFTC.Preloader()");
@@ -42,7 +77,7 @@ AFTC.Preloader = function () {
         cache: true,
 
         batch: [],
-        batchSize: 4,
+        batchSize: 3,
         filesInBatch: 0,
 
         types: [], // array of {ext,count,loaded}
@@ -68,6 +103,8 @@ AFTC.Preloader = function () {
         onError: null,
 
         xhrAvailable: false,
+
+        files:[]
     };
 
 
@@ -77,6 +114,8 @@ AFTC.Preloader = function () {
         this.url = "";
         this.urlCacheString = "";
         this.ext = "";
+
+        this.data = "";
 
         this.processed = false;
         this.done = false;
@@ -121,15 +160,6 @@ AFTC.Preloader = function () {
     }
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-
-    // Check if jQuery is available
-    if (typeof jQuery == 'undefined') {
-        // jQuery is not loaded 
-        //log("AFTC.Preloader: jQuery is not available");
-    } else {
-        // jQuery is loaded
-        //log("AFTC.Preloader: jQuery is available!");
-    }
 
 
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

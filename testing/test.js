@@ -110,13 +110,17 @@ var onProgressHandler = function (obj) {
 var t = 0;
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 var onCompleteHandler = function () {
-    log("####################################################");
     log("window.onCompleteHandler()");
-    log("####################################################");
 
+    //var a = myPreloader.getItemById("json1");
+    var img = new Image();
+    img.onload = function(){
+        log("10mb image loaded!");
+    }
+    img.src = "./img/10mb.jpg";
+    //log(a);
 
-
-
+    return;
     // Example of how to retrieve an SVG and access its DOM
     // NOTE: SVG Attached via preloader image attachment is image tag based and its DOM is not accessible
     // To access an SVG you need to retrieve the SVG as a string from the preloader via getSVGById
@@ -162,7 +166,7 @@ function init() {
 
 
     myPreloader = new AFTC.Preloader({
-        batchSize: 5,
+        batchSize: 3,
         onComplete: onCompleteHandler,
         onProgress: onProgressHandler,
         cache: false,
@@ -172,17 +176,19 @@ function init() {
 
 
     myPreloader
-        .add({url: "img/img01.jpg", cache: false})
-        .add({url: "img/img02.jpg"})
-        .add({url: "img/img03.jpg"})
-        .add({url: "img/img04.jpg"})
-        .add({url: "img/img05.jpg"})
-        .add({url: "img/img06.jpg"})
-        .add({url: "img/img07.jpg"})
-        .add({url: "img/img08.jpg"})
-        .add({url: "img/img09.jpg"})
-        .add({url: "img/img10.jpg"})
-        .add({url: "generated/styles1.css", cache: false})
+        .add({id:"img1", url: "img/img01.jpg", cache: true})
+        .add({id:"img2", url: "img/img02.jpg"})
+        .add({id:"img3", url: "img/img03.jpg"})
+        .add({id:"img4", url: "img/img04.jpg"})
+        .add({id:"img5", url: "img/img05.jpg"})
+        .add({id:"img6", url: "img/img06.jpg"})
+        .add({id:"img7", url: "img/img07.jpg"})
+        .add({id:"img8", url: "img/img08.jpg"})
+        .add({id:"img9", url: "img/img09.jpg"})
+        .add({id:"img10", url: "img/img10.jpg"})
+        .add({id:"img11", url: "img/10mb.jpg", cache: true})
+        //
+        .add({url: "generated/styles1.css", cache: true})
         .add({url: "generated/styles2.css"})
         .add({url: "generated/styles3.css"})
         .add({url: "generated/styles4.css"})
@@ -192,7 +198,7 @@ function init() {
         .add({url: "generated/styles8.css"})
         .add({url: "generated/styles9.css"})
         .add({url: "generated/styles10.css"})
-        //
+        // //
         .add({url: "generated/javascript1.js"})
         .add({url: "generated/javascript2.js"})
         .add({url: "generated/javascript3.js"})
@@ -202,22 +208,24 @@ function init() {
         .add({url: "generated/javascript7.js"})
         .add({url: "generated/javascript8.js"})
         .add({url: "generated/javascript9.js"})
-        .add({url: "generated/javascript10.js"});
+        .add({url: "generated/javascript10.js"})
+        // //
+        .add({id: "json1", url: "names.json"});
 
-    var svgUID,
-        file;
+    // var svgUID,
+    //     file;
 
-    for (var i = 1; i <= 20; i++) {
-        svgUID = "svg"+i;
-        file = "svg/icons/icon_"+i+".svg";
-        myPreloader.add({id:svgUID,url: file});
-    }
+    // for (var i = 1; i <= 20; i++) {
+    //     svgUID = "svg"+i;
+    //     file = "svg/icons/icon_"+i+".svg";
+    //     myPreloader.add({id:svgUID,url: file});
+    // }
 
-    for (var i = 1; i <= 3; i++) {
-        svgUID = "svgTrace"+i;
-        file = "svg/trace_"+i+".svg";
-        myPreloader.add({id:svgUID,url: file});
-    }
+    // for (var i = 1; i <= 6; i++) {
+    //     svgUID = "svgTrace"+i;
+    //     file = "svg/trace_"+i+".svg";
+    //     myPreloader.add({id:svgUID,url: file});
+    // }
 
 
 

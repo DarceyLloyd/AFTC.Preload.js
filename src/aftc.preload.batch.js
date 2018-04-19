@@ -42,6 +42,7 @@ AFTC.Preloader.prototype.getBatchFilesToLoad = function () {
 
         // NOTE: fileVo is a link to que[i], changes in fileVo will be reflected in que[i]
         var fileVo = this.params.que[i];
+        // log(fileVo);
 
         // Ensure we dont add files to the batch which are already in the batch que
         if (!fileVo.loading && !fileVo.processed) {

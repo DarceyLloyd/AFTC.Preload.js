@@ -43,19 +43,19 @@ AFTC.Preloader.prototype.xhrLoad = function (fileVo) {
         fileVo.xhrReadyState = e.target.readyState;
         fileVo.xhrStatus = e.target.status;
 
-        ////log("xhrReadyState = " + fileVo.xhrReadyState + "   :   xhrStatus = " + fileVo.xhrStatus);
-        ////log(e.target.statusText);
+        //log("xhrReadyState = " + fileVo.xhrReadyState + "   :   xhrStatus = " + fileVo.xhrStatus);
+        //log(e.target.statusText);
 
         if (fileVo.xhrReadyState === 4) {
             if (fileVo.xhrStatus === 200) {
-                ////log(e.target._url + " SUCCESS");
+                //log(e.target._url + " SUCCESS");
                 fileVo.xhrSuccess = true;
             } else {
-                ////log(e.target._url + " FAILED");
+                //log(e.target._url + " FAILED");
                 fileVo.xhrSuccess = false;
             }
             fileVo.xhrStatusText = e.target.statusText;
-            ////log("xhrReadyState = " + fileVo.xhrReadyState + "   :   xhrStatus = " + fileVo.xhrStatus + "   :   xhrStatusText = " + fileVo.xhrStatusText);
+            //log("xhrReadyState = " + fileVo.xhrReadyState + "   :   xhrStatus = " + fileVo.xhrStatus + "   :   xhrStatusText = " + fileVo.xhrStatusText);
         }
 
 
@@ -69,6 +69,9 @@ AFTC.Preloader.prototype.xhrLoad = function (fileVo) {
     } else {
         fileVo.xhr = new ActiveXObject('Microsoft.XMLHTTP')
     }
+
+
+
 
     fileVo.xhr.addEventListener("progress", this.xhrProgressHandler);
     fileVo.xhr.addEventListener("load", this.xhrLoadHandler);
@@ -84,7 +87,7 @@ AFTC.Preloader.prototype.xhrLoad = function (fileVo) {
     fileVo.xhrLoading = true;
 
     var url = fileVo.url;
-    if (fileVo.urlCacheString != ""){
+    if (fileVo.urlCacheString != "") {
         url = url + fileVo.urlCacheString;
     }
     //log("---- xhr " + url + "     fileVo.urlCacheString = " + fileVo.urlCacheString);
@@ -171,9 +174,21 @@ AFTC.Preloader.prototype.xhrUserAbortHandler = function (e) {
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 AFTC.Preloader.prototype.xhrLoadEndHandler = function (e) {
+    // log(e.currentTarget.responseText);
+
     var batchIndex = e.target._batchIndex;
     var me = e.target._me;
     var fileVo = me.params.batch[batchIndex];
+    //log("fileVo.ext = " + fileVo.ext);
+
+    fileVo.ext = fileVo.ext.toLowerCase();
+    if (
+        fileVo.ext == "css" || fileVo.ext == "js" ||
+        fileVo.ext == "svg" || fileVo.ext == "json" ||
+        fileVo.ext == "csv" || fileVo.ext == "txt"
+    ) {
+        fileVo.data = e.currentTarget.responseText;
+    }
     //log("AFTC.Preloader.prototype.xhrLoadEndHandler(e): " + fileVo.url);
 
     // Flag xhr is done
@@ -185,9 +200,9 @@ AFTC.Preloader.prototype.xhrLoadEndHandler = function (e) {
     if (fileVo.isImage) {
         // Start JS:Image loader
         //log("0");
-        if (fileVo.ext == "svg"){
+        if (fileVo.ext == "svg") {
             me.params.svgs.push(
-                {id:fileVo.id,svg:e.target.responseText,url:fileVo.url}
+                { id: fileVo.id, svg: e.target.responseText, url: fileVo.url }
             )
             // log(e.target.responseText);
         }

@@ -1,31 +1,82 @@
 # <b>AFTC.PreloadJS</b>
 [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=Darcey%2eLloyd%40gmail%2ecom&lc=GB&item_name=Darcey%20Lloyd%20Developer%20Donation&currency_code=GBP&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted)
 
-### AFTC.Preload is a light weight (9kb), quick, no fuss, easy to use preloader with advanced features should you want to use them.
+### AFTC.Preload is a light weight (10kb), quick, no fuss, easy to use preloader with advanced features should you want to use them.
 
-### Working example can be seen here:
-https://darceylloyd.github.io/aftc.preload.js/testing
+## Working examples can be seen @:
+http://dev.aftc.io/git/AFTC.Preload.js/testing/complex.htm
+
+and
+
+http://dev.aftc.io/git/AFTC.Preload.js/testing/simple.htm
 
 ## Why did I make this? 
 I wanted something quick and easy, just like a preloader should be with no other nonsense that came with it.
 
-Can't get simpler than:
+### 1. Setup and Start the preload:
 ```
-function myStuffHasLoaded(){
-// Preloader complete do your thing
-}
-var myPreloader = new AFTC.Preloader({onComplete:myStuffHasLoaded);
-myPreloader
-   .add({url:"images/img1.jpg"})
+var preloader = new AFTC.Preloader({
+    onProgress:onProgressHandler,
+    onComplete:onCompleteHandler
+    });
+
+preloader
+   .add({id: "img1", url:"images/img1.jpg"})
+   .add({id: "svg1", url:"images/svg1.svg"})
    .add({url:"js/script1.js"})
    .add({url:"css/styles1.css"})
-   .add({url:"data/country_codes.json"});
-myPreloader.start();
+   .add({id: "json1", url:"data/country_codes.json"});
+preloader.start();
+```
+
+### 2. Do some stuff while it's preloading:
+```
+function onProgressHandler(e) {
+    var message = document.getElementById("percentage");
+    message.innerHTML = e.percentLoaded + "%<br>Currently loading: " + e.url;
+}
+```
+
+### 3. Preloading is complete! How to use your assets
+```
+// CSS is attached to the DOM on load complete (so careful with sequence or you will end up using !important a lot)
+
+// JS is attached to the DOM on load complete and executed (so careful with sequence if your coding on global scope)
+
+// The rest relies on the browser cache, do your stuff as normal
+
+function onCompleteHandler(){
+    // Preloader complete
+    document.getElementById("loading-message").innerHTML = "LOADING COMPELTE!";
+
+    // Example of how to load a preloaded image
+    var img1 = preloader.getItemById("img1");
+    img1.width = 100;
+    img1.height = 100;
+    log("img1 = " + img1);
+    dump.appendChild(img1);
+
+    // Example of retrieving JSON data from the preloader
+    var data1 = JSON.parse(preloader.getItemById("json1"));
+    log(data1.list[0]);
+    log("data1.list[0].item = " + data1.list[0].item);
+
+    // Example of retrieving text data from the preloader
+    var txt1 = preloader.getItemById("txt1");
+    log(txt1);
+    log("txt1 = \"" + txt1 + "\"");
+
+    // Example of retrieving an svg from the preloader
+    var svg1 = preloader.getItemById("svg1");
+    var svg1Container = document.createElement("div");
+    svg1Container.style.width = "150px";
+    svg1Container.style.height = "150px";
+    svg1Container.innerHTML = svg1;
+    dump.appendChild(svg1Container);
+
+    
+}
 ``` 
-
-
-### What's new
-<b>jQuery is no longer required for xhr preloading, I have now written my own xhr functions.</b>
 
 
 ### Dependencies
@@ -67,8 +118,8 @@ var myPreloader = new AFTC.Preloader({
 
 ## Adding files for preloading ".add({params})"
 
-### .add({id:string,url:string,cache:boolean});
-- id : string - optional(yes) : Specify a unique id for your ID if you to use the more advanced features such asset retrieval
+### .add({uid:string,url:string,cache:boolean});
+- uid : string - optional(yes) : Specify a unique id for your ID if you to use the more advanced features such asset retrieval
 - url : string - optional(no) : URL / Path to the file you wish to preload
 - cache : boolean - optional(yes) : turn file caching off or on at the single file level
 
@@ -78,59 +129,96 @@ var myPreloader = new AFTC.Preloader({
 
 
 ## Most common usage example:
+Please see tests/simple.htm
 ```
-function preloaderComplete(){
-    console.log("Preloader has completed!");
+var preloader, percentage, imageDump;
+
+function onCompleteHandler() {
+    log("onCompleteHandler()");
+    percentage.innerHTML = "Preloader has completed!";
+
+    // Example of how to load a preloaded image
+    var img1 = preloader.getItemById("img1");
+    img1.width = 100;
+    img1.height = 100;
+    log("img1 = " + img1);
+    dump.appendChild(img1);
+
+    // Example of retrieving JSON data from the preloader
+    var data1 = JSON.parse(preloader.getItemById("json1"));
+    log(data1.list[0]);
+    log("data1.list[0].item = " + data1.list[0].item);
+
+    // Example of retrieving text data from the preloader
+    var txt1 = preloader.getItemById("txt1");
+    log(txt1);
+    log("txt1 = \"" + txt1 + "\"");
+
+    // Example of retrieving an svg from the preloader
+    var svg1 = preloader.getItemById("svg1");
+    var svg1Container = document.createElement("div");
+    svg1Container.style.width = "150px";
+    svg1Container.style.height = "150px";
+    svg1Container.innerHTML = svg1;
+    dump.appendChild(svg1Container);
 }
 
-function preloaderProgressHandler(obj){
-    console.log("PreloaderProgressHandler(): Percent loaded = " + obj.percentLoaded);
-    // Create your progress bar here or do more (see test.htm in testing folder)
-    console.log(obj); // see what's available to you in console
+
+
+function onProgressHandler(e) {
+    percentage.innerHTML = e.percentLoaded + "%<br>Currently loading: " + e.url;
 }
 
-var myPreloader = new AFTC.Preloader({
-    batchSize: 5,
-    onComplete: preloaderComplete,
-    onProgress: preloaderProgressHandler,
-    cache: false,
-    attachImagesToDom: true,
-    domElementToAttachImagesTo: "imgDebug"
 
+
+onReady(function () {
+    logTo("out"); // set log to output to a html element also
+    log("AFTC.PRELOAD.JS"); // log to console and html element set above
+
+    // Var defs
+    percentage = document.getElementById("percentage");
+    imageDump = document.getElementById("dump");
+
+    preloader = new AFTC.Preloader({
+        batchSize: 3,
+        onProgress: onProgressHandler,
+        onComplete: onCompleteHandler
+    });
+
+    preloader
+        .add({ id: "img1", url: "img/img01.jpg", cache: false })
+        .add({ id: "img2", url: "img/img02.jpg" })
+        .add({ id: "img3", url: "img/img03.jpg" })
+        //
+        .add({ id: "svg1", url: "svg/trace_1.svg", cache: false })
+        //
+        .add({ id: "css1", url: "generated/styles1.css", cache: false })
+        .add({ id: "css2", url: "generated/styles2.css" })
+        .add({ id: "css3", url: "generated/styles3.css" })
+        //
+        .add({ id: "js1", url: "generated/javascript1.js", cache: false })
+        .add({ id: "js2", url: "generated/javascript2.js" })
+        .add({ id: "js3", url: "generated/javascript3.js" })
+        //
+        .add({ id: "json1", url: "generated/data1.json" })
+        .add({ id: "json2", url: "generated/data2.json" })
+        .add({ id: "json3", url: "generated/data3.json" })
+        //
+        .add({ id: "txt1", url: "test.txt" });
+
+    for(var i=0; i<preloader.params.que.length; i++){
+        log("Adding [" + preloader.params.que[i].url + "] for preload!");
+    }
+    log("- - STARTING PRELOADER -- ")
+    preloader.start();
 });
-
-
-
-// Add files you wish to preload like so
-/*
-myPreloader.add({
-    id:<unique_id>,
-    url:<url>
-});
-*/
-
-myPreloader
-    .add({url:"includes/css/aftc/aftc1.css"});
-    .add({url: "img/img07.jpg"})
-    .add({url: "img/img08.jpg"})
-    .add({url: "img/img09.jpg"})
-    .add({url: "img/img10.jpg"})
-    .add({url: "generated/styles1.css", cache: false})
-    .add({url: "generated/styles2.css"})
-    .add({url: "generated/styles3.css"})
-    .add({url: "generated/styles4.css"});
-
-myPreloader.start();
 ```
 
-
-You may also chain like so
+html
 ```
-myPreloader
-    .add({url:"includes/css/aftc/aftc4.css"})
-    .add({url:"includes/css/aftc/aftc5.css"})
-    .add({url:"includes/css/aftc/aftc6.css"})
-
+<h2 id="percentage"></h2>
+<div id="dump" class="box"></div>
+<div id="out" class="box"></div>
 ```
 
 
