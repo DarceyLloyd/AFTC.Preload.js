@@ -13,7 +13,12 @@
             font-size: 1rem;
         }
 
-        h1,h2,h3,h4,h5,h6 {
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
             margin: 5px;
             padding: 0;
         }
@@ -24,9 +29,7 @@
             margin: 20px 0;
         }
 
-        #out {
-
-        }
+        #out {}
 
 
 
@@ -104,17 +107,7 @@
             text-align: center;
         }
     </style>
-    <script src="../dist/aftc.preload.js"></script>
-
-    <!--<script src="../src/aftc.preload.js"></script>-->
-    <!--<script src="../src/aftc.preload.js.js"></script>-->
-    <!--<script src="../src/aftc.preload.css.js"></script>-->
-    <!--<script src="../src/aftc.preload.img.js"></script>-->
-    <!--<script src="../src/aftc.preload.font.js"></script>-->
-    <!--<script src="../src/aftc.preload.xhr.js"></script>-->
-    <!--<script src="../src/aftc.preload.public.js"></script>-->
-    <!--<script src="../src/aftc.preload.on.js"></script>-->
-    <!--<script src="../src/aftc.preload.batch.js"></script>-->
+    <script src="../dist/aftc.preload.min.js"></script>
     <script src="test.js"></script>
 
     <!--<link rel="stylesheet" type="text/css" href="./generated/styles1.css"/>-->
@@ -132,11 +125,26 @@
         <div class="details"></div>
     </div>
 
-    <div id="cssDebug" class="box">
-        <h4>CSS Debug Area:</h4>
-        <div id="css-check-1"></div>
-        <div id="css-check-2"></div>
+    <div class="box">
+        <table width="100%">
+            <tr>
+                <td valign="top">
+                    <div id="cssDebug" class="box">
+                        <h4>CSS Debug Area:</h4>
+                        <div id="css-check-1"></div>
+                        <div id="css-check-2"></div>
+                    </div>
+                </td>
+                <td valign="top">
+                    <div id="jsDebug" class="box">
+                        <h4>JavaScript Debug Area:</h4>
+                    </div>
+                </td>
+            </tr>
+        </table>
     </div>
+
+
 
 
 
@@ -155,9 +163,7 @@
 
 
 
-    <div id="jsDebug" class="box">
-        <h4>JavaScript Debug Area:</h4>
-    </div>
+
 
     <script>
         init();

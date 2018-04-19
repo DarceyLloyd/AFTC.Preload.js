@@ -854,6 +854,7 @@ AFTC.Preloader.prototype.jsLoadStyleSheet = function (fileVo) {
         fileVo.jsSuccess = true;
         fileVo.jsProcessed = true;
         fileVo.done = true;
+        fileVo.loaded = 100;
         me.params.noOfFilesLoaded++;
 
         // Batch proceed
@@ -867,6 +868,7 @@ AFTC.Preloader.prototype.jsLoadStyleSheet = function (fileVo) {
         fileVo.jsSuccess = true;
         fileVo.jsProcessed = true;
         fileVo.done = true;
+        fileVo.loaded = 0;
         me.params.noOfFilesFailed++;
 
         // Batch proceed
@@ -935,6 +937,7 @@ AFTC.Preloader.prototype.jsLoadScript = function (fileVo) {
         fileVo.jsSuccess = true;
         fileVo.jsProcessed = true;
         fileVo.done = true;
+        fileVo.loaded = 100;
         me.params.noOfFilesLoaded++;
 
         // Batch proceed
@@ -948,6 +951,7 @@ AFTC.Preloader.prototype.jsLoadScript = function (fileVo) {
         fileVo.jsSuccess = true;
         fileVo.jsProcessed = true;
         fileVo.done = true;
+        fileVo.loaded = 0;
         me.params.noOfFilesFailed++;
 
         // Batch proceed
