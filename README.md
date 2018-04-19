@@ -273,5 +273,7 @@ Any and all donations to help keep active development and the lights on are more
 
 [![Hire](https://www.allforthecode.com/images/pph_widget.jpg)](http://pph.me/Darcey)
 
-<a href="http://pph.me/Darcey" target="_blank"><img src="https://www.allforthecode.com/images/pph_widget.jpg" width="400"></a>
 
+
+http://pph.me/Darcey - automatic!
+[GitHub](http://pph.me/Darcey)
