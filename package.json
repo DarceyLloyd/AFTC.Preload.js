@@ -1,6 +1,6 @@
 {
   "name": "aftc.preload",
-  "version": "1.1.10",
+  "version": "1.1.11",
   "description": "A quick and to the point preloader.",
   "main": "index.js",
   "scripts": {
