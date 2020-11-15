@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Preloader</title>
+    <style>
+        .box {
+            border: 1px solid #000000;
+            padding: 3px;
+        }
+
+        #files {
+            height: 400px;
+            overflow: auto;
+        }
+    </style>
+
+    <script type="module">
+
+        import { onReady, log, setHTML } from "../node_modules/aftc-modules/aftc-modules.js";
+        import { AFTCPreloader } from "../aftc.preloader.js"
+
+        onReady(() => {
+            log("DOM ready()");
+
+            init();
+        });
+
+        function init() {
+
+            const preloader = new AFTCPreloader({
+                onProgressHandler: onProgressHandler,
+                onCompleteHandler: onCompleteHandler
+            });
+
+            preloader.help();
+
+            preloader.start("./preloader.json");
+
+            function onProgressHandler(p,file) {
+                setHTML("status","Loading");
+                setHTML("percent",p + "%");
+                setHTML("files",file,"prepend");
+                // log("onProgressHandler(p:" + p + ")");
+            }
+
+            function onCompleteHandler() {
+                setHTML("status","Loaded");
+                // log("onCompleteHandler()");
+            }
+
+        }
+
+    </script>
+    <script>
+        function log(arg) { console.log(arg); }
+    </script>
+</head>
+
+<body>
+
+    <h2>AFTCPreloader</h2>
+    <p>See console for more information...</p>
+
+    <h4>Status:</h4>
+    <div id="status" class="box"></div>
+
+    <h4>Percent loaded:</h4>
+    <div id="percent" class="box"></div>
+
+    <h4>Files loaded:</h4>
+    <div id="files" class="box"></div>
+
+    <div id="jsDebug"></div>
+
+
+</body>
+
+</html>

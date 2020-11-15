@@ -1,0 +1,12 @@
+.DS_Store
+.old
+.bat
+.sh
+.md
+backups
+beta
+test
+gulpfile.js
+webpack.*.js
+babel.config.js
+#src

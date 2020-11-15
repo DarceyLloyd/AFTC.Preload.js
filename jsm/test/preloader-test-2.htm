@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Preloader</title>
+    <style>
+        .box {
+            border: 1px solid #000000;
+            padding: 3px;
+        }
+
+        #files {
+            height: 400px;
+            overflow: auto;
+        }
+    </style>
+
+    <script>
+        function log(arg) { console.log(arg); }
+    </script>
+    <script src="./preloader-test-2.js"></script>
+</head>
+
+<body>
+
+    <h2>AFTCPreloader</h2>
+    <p>See console for more information...</p>
+
+    <h4>Status:</h4>
+    <div id="status" class="box"></div>
+
+    <h4>Percent loaded:</h4>
+    <div id="percent" class="box"></div>
+
+    <h4>Files loaded:</h4>
+    <div id="files" class="box"></div>
+
+    <div id="jsDebug"></div>
+
+
+</body>
+
+</html>
