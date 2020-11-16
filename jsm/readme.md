@@ -74,11 +74,14 @@ const preloader = new AFTCPreloader({
     onCompleteHandler: onCompleteHandler
 });
 
-preloader.help(); // Shows some help info
+// preloader.help(); // Shows some help info
 
+// Load JSON list of files into the preload and start preloading
 preloader.start("./preloader.json");
 
 function onProgressHandler(p,file) {
+    // NOTE setHTML is from library aftc.js (ES5) / aftc-modules (JSM)
+
     // Sets html element with id "status" to "Loading"
     setHTML("status","Loading");
 
@@ -90,6 +93,8 @@ function onProgressHandler(p,file) {
 }
 
 function onCompleteHandler() {
+    // NOTE setHTML is from library aftc.js (ES5) / aftc-modules (JSM)
+
     // Sets html element with id "status" to "Loaded"
     setHTML("status","Loaded");
 }

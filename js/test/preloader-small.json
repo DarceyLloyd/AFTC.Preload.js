@@ -1,0 +1,8 @@
+[
+    {"src":"./assets/preloader/data/names.json"},
+    {"src":"./assets/preloader/svg/trace_5.svg"},
+    {"src":"./assets/preloader/generated/javascript1.js","autoAttach":false},
+    {"src":"./assets/preloader/generated/javascript10.js","autoAttach":true},
+    {"src":"./assets/preloader/generated/javascript2.js","autoAttach":true},
+    {"src":"./assets/preloader/svg/trace_6.svg"}
+]

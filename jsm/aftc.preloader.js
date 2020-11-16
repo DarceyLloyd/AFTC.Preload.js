@@ -62,8 +62,6 @@ export class AFTCPreloader {
         this.thread = []; // [0] > [noOfThreads] = "available" || "filled"
     
         this.queueCompleted = false;
-    
-        this.timer = false;
 
         argsToObject(arguments, this, true);
 
@@ -82,10 +80,9 @@ export class AFTCPreloader {
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 
-    add(id, src, autoAttach = true) {
+    add(src, autoAttach = true) {
         // log("AFTCPreloader.add(id,src,autoAttach=true)");
         let entry = this.ItemVo();
-        entry.id = id;
         entry.src = src;
         entry.autoAttach = autoAttach;
         this.queue.push(entry);
@@ -115,7 +112,7 @@ export class AFTCPreloader {
     loadConfig(path) {
         // log("AFTCPreloader.loadConfig(path:" + path + ")");
 
-        var xhr = new XMLHttpRequest();
+        let xhr = new XMLHttpRequest();
         xhr.open('GET', path, true);
 
         xhr.onreadystatechange = (e) => {
