@@ -9,4 +9,5 @@ test
 gulpfile.js
 webpack.*.js
 babel.config.js
+node_modules
 #src
