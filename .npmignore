@@ -6,8 +6,11 @@
 backups
 beta
 test
+testing
 gulpfile.js
 webpack.*.js
+package-lock.json
 babel.config.js
 node_modules
-#src
+src
+gulpfile.js
