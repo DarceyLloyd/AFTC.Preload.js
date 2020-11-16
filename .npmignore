@@ -4,7 +4,7 @@
 *webpack*.js
 package*.json
 package.json
-babel-config.js
+babel.config.js
 gulpfile.js
 src
 test
