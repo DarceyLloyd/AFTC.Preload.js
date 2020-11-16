@@ -42,6 +42,7 @@
     </script>
 ```
 
+<br><hr><br>
 
 ## <b>Usage example 2 - Webpack</b>
 See files "./test/preloader-test-2.htm" & "./src/preloader-test-2.js".
@@ -92,4 +93,23 @@ function onCompleteHandler() {
     // Sets html element with id "status" to "Loaded"
     setHTML("status","Loaded");
 }
+```
+
+<br><hr><br>
+
+### <b>JSON Format</b>
+autoAttach is optional, defaults to true, is only used for js and css file types (detected by file extension).
+```
+[
+    {"src":"./data8.json"},
+    {"src":"./data9.json"},
+    {"src":"./javascript1.js","autoAttach":false},
+    {"src":"./styles100.css","autoAttach":true},
+    {"src":"./javascript2.js","autoAttach":true}
+]
+```
+
+Usage
+```
+preloader.start("./preloader.json");
 ```

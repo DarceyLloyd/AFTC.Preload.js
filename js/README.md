@@ -3,6 +3,8 @@
 
 ### ES5 version is scheduled for re-build (when I have use for it), if your using JavaScript modules / webpack use the jsm version.
 
+https://github.com/DarceyLloyd/AFTC.Preload.js/tree/master/jsm
+
 <hr>
 
 #### Want to use the old version?

@@ -3,6 +3,11 @@
 
 ### ES5 Version
 Click on the "js" folder above.
+https://github.com/DarceyLloyd/AFTC.Preload.js/tree/master/js
 
 ### JS Modules usage
 Click on the "jsm" folder above.
+https://github.com/DarceyLloyd/AFTC.Preload.js/tree/master/jsm
+
+### It is recommend that you use the JSM version
+https://github.com/DarceyLloyd/AFTC.Preload.js/tree/master/jsm
